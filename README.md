@@ -1,7 +1,7 @@
 # Aplikacja do Zarządzania Wydatkami Osobistymi
 
 ## Opis Projektu
-Nasza aplikacja mobilna, stworzona z wykorzystaniem Flutter, jest narzędziem przeznaczonym do analizy i zarządzania wydatkami osobistymi. Aplikacja oferuje szereg funkcji ułatwiających kontrolę nad finansami, w tym:
+Aplikacja mobilna z wykorzystaniem Flutter, stworzona zespołowo w ramach projektu na zajęcia, jest narzędziem przeznaczonym do analizy i zarządzania wydatkami osobistymi. Aplikacja oferuje szereg funkcji ułatwiających kontrolę nad finansami, w tym:
 
 - **Ręczne wprowadzanie wydatków:** Szybkie i intuicyjne dodawanie wydatków, np. po zakupie w sklepie spożywczym.
 - **Skanowanie rachunków:** Automatyzacja procesu eksportowania wydatków do aplikacji poprzez skanowanie rachunków.
