@@ -17,7 +17,7 @@ The project tackles the challenge of effectively managing personal expenses. Use
 - Difficulties in maintaining budgetary discipline without tools that remind users of their spending limits.
 
 ## Expected Results
-Our application aims to provide users with:
+Application aims to provide users with:
 
 - An easy-to-use tool for managing expenses.
 - Enhanced financial awareness through detailed analyses and summaries of spending.
