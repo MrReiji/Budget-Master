@@ -1,26 +1,26 @@
-# Aplikacja do Zarządzania Wydatkami Osobistymi
+# Personal Expense Management Application
 
-## Opis Projektu
-Nasza aplikacja mobilna, stworzona z wykorzystaniem Flutter, jest narzędziem przeznaczonym do analizy i zarządzania wydatkami osobistymi. Aplikacja oferuje szereg funkcji ułatwiających kontrolę nad finansami, w tym:
+## Project Description
+This mobile application, developed using Flutter for a class project, is a tool designed for the analysis and management of personal expenses. It offers several features to facilitate financial control, including:
 
-- **Ręczne wprowadzanie wydatków:** Szybkie i intuicyjne dodawanie wydatków, np. po zakupie w sklepie spożywczym.
-- **Skanowanie rachunków:** Automatyzacja procesu eksportowania wydatków do aplikacji poprzez skanowanie rachunków.
-- **Generowanie podsumowań wydatków:** Możliwość przeglądania wydatków na różnych poziomach - dziennym, tygodniowym, miesięcznym i rocznym.
-- **Analiza wydatków za pomocą wykresów:** Graficzna prezentacja danych, w tym najczęściej kupowanych produktów i ich ilości.
-- **Ustawienie limitu wydatków z powiadomieniami:** Funkcja pomagająca w utrzymaniu dyscypliny budżetowej dzięki przypomnieniom o zbliżaniu się do ustawionego limitu wydatków.
+- **Manual Entry of Expenses:** Quick and intuitive addition of expenses, such as after shopping at a grocery store.
+- **Scanning of Receipts:** Automates the exporting of expenses into the application by scanning receipts.
+- **Generating Expense Summaries:** Allows viewing expenses at different levels - daily, weekly, monthly, and yearly.
+- **Analysis of Expenses Through Charts:** Graphical presentation of data, highlighting the most frequently purchased products and their quantities.
+- **Setting Expense Limits with Notifications:** Assists in maintaining budgetary discipline with reminders when approaching the set expense limits.
 
-## Problem, na który odpowiada projekt
-Projekt adresuje problem trudności w efektywnym zarządzaniu wydatkami osobistymi. Użytkownicy często napotykają na przeszkody takie jak:
+## Problem Addressed by the Project
+The project tackles the challenge of effectively managing personal expenses. Users often face obstacles including:
 
-- Brak intuicyjnych narzędzi do śledzenia i analizy wydatków.
-- Czasochłonne i niezbyt dokładne manualne monitorowanie wydatków.
-- Trudności w utrzymaniu dyscypliny budżetowej bez odpowiednich narzędzi przypominających o limitach.
+- A lack of intuitive tools for tracking and analyzing expenses.
+- The time-consuming and imprecise nature of manually monitoring expenses.
+- Difficulties in maintaining budgetary discipline without tools that remind users of their spending limits.
 
-## Oczekiwane Rezultaty
-Nasza aplikacja ma na celu dostarczenie użytkownikom:
+## Expected Results
+Application aims to provide users with:
 
-- Łatwego w obsłudze narzędzia do zarządzania wydatkami.
-- Zwiększenie świadomości finansowej dzięki szczegółowym analizom i podsumowaniom.
-- Oszczędność czasu dzięki funkcji automatycznego wprowadzania danych.
-- Redukcja nieplanowanych wydatków oraz poprawa regularności w śledzeniu wydatków.
-- Zwiększenie liczby osób ustawiających i przestrzegających miesięczne limity wydatków.
+- An easy-to-use tool for managing expenses.
+- Enhanced financial awareness through detailed analyses and summaries of spending.
+- Time-saving features, such as automatic data entry.
+- Reduction in unplanned expenses and improvement in the regularity of tracking expenses.
+- An increase in the number of users setting and adhering to monthly expense limits.
