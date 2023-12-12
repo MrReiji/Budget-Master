@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Constants.scaffoldBackgroundColor,
         buttonBackgroundColor: Constants.primaryColor,
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                               ),
                               TextSpan(
-                                text: "FlutterPanda!",
+                                text: "TODO:FirebaseUserName!",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
@@ -84,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Image.asset(
-                          "assets/dp.png",
+                          "assets/profile.png",
+                          scale: 6,
                         )
                       ],
                     )
