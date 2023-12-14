@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>***REMOVED***</string>
+	<string>dotenv.get('GOOGLE_SERVICE_INFO_PLIST_API_KEY')</string>
 	<key>GCM_SENDER_ID</key>
-	<string>***REMOVED***</string>
+	<string>630153029956</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>***REMOVED***.RunnerTests</string>
+	<string>com.example.budgetMaster.RunnerTests</string>
 	<key>PROJECT_ID</key>
-	<string>***REMOVED***</string>
+	<string>budget-master-fe572</string>
 	<key>STORAGE_BUCKET</key>
-	<string>***REMOVED***.appspot.com</string>
+	<string>budget-master-fe572.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:***REMOVED***:ios:a4ad4228f61b9fa8470f11</string>
+	<string>1:630153029956:ios:a4ad4228f61b9fa8470f11</string>
 </dict>
 </plist>

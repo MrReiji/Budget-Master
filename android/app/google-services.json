@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "***REMOVED***",
-    "project_id": "***REMOVED***",
-    "storage_bucket": "***REMOVED***.appspot.com"
+    "project_number": "630153029956",
+    "project_id": "budget-master-fe572",
+    "storage_bucket": "budget-master-fe572.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:***REMOVED***:android:d09f9cf47044f0c6470f11",
+        "mobilesdk_app_id": "1:630153029956:android:d09f9cf47044f0c6470f11",
         "android_client_info": {
           "package_name": "com.example.budget_master"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "***REMOVED***"
+          "current_key": "AIzaSyCb2S6k6TUlmCACGgclqDkrSBbvmj7Xy3Y"
         }
       ],
       "services": {
