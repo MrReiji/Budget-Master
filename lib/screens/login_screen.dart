@@ -102,7 +102,6 @@ class LoginScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // Lets make a generic input widget
                                 InputWidget(
                                   topLabel: "Email",
                                   hintText: "Enter your email address",
