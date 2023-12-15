@@ -32,8 +32,12 @@ dependencies:
     sdk: flutter
   flutter_tesseract_ocr: ^0.4.24 
   image_picker: ^1.0.4
-  flutter_form_bloc: ^0.30.1
-  go_router: ^10.0.0
+  # flutter_form_bloc: ^0.31.0
+  flutter_form_bloc:
+    git:
+      url: https://github.com/Cavin6080/form_bloc.git
+      path: packages/flutter_form_bloc
+  go_router: ^12.1.3
   cloud_firestore: ^4.13.6
   flutter_dotenv: ^5.1.0
   
@@ -46,9 +50,6 @@ dependencies:
   flutter_screenutil: ^5.9.0
   curved_navigation_bar: ^1.0.3
   firebase_core: ^2.24.2
-
-dependency_overrides:
-  test_api: 0.4.18  
 
 dev_dependencies:
   flutter_test:
