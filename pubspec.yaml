@@ -52,6 +52,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   curved_navigation_bar: ^1.0.3
   firebase_core: ^2.24.2
+  flutter_lints: ^3.0.1
 
 # dependency_overrides:
 #   test_api: 0.4.18  
