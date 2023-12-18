@@ -1,0 +1,32 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Dart
+
+on:
+  workflow_run:
+    branches: ['main']
+    workflows: ['test']
+    types: ['completed']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.12.0
+        with:
+          channel: 'stable'
+          
+      - name: Get packages
+        run: flutter pub get
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Build apk
+        run: flutter build apk
+      - name: Build appbundle
+        run: flutter build appbundle
