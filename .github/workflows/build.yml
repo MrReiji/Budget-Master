@@ -6,7 +6,10 @@
 name: Build
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    branches: ['main']
+    workflows: ['Test']
+    types: ['completed']
 
 jobs:
   Build:
