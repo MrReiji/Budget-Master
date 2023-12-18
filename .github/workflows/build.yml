@@ -10,6 +10,12 @@ on:
     branches: ['main']
     workflows: ['Test']
     types: ['completed']
+  workflow_dispatch:
+    
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   Build:
@@ -30,3 +36,39 @@ jobs:
         run: flutter build apk
       - name: Build appbundle
         run: flutter build appbundle
+      - name: Upload apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: BM-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Upload appbundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: BM-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+    - name: Delete tag and release
+      uses: dev-drprasad/delete-tag-and-release@v1.0
+      with:
+        delete_release: true # default: false
+        tag_name: bleeding-edge # tag name to delete
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: bleeding-edge
+        name: Bleeding Edge
+        prerelease: false
+        fail_on_unmatched_files: true
+        files: |
+          */*
+        body: | 
+          Automatically generated bleeding edge release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
