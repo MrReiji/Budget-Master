@@ -26,11 +26,12 @@ jobs:
         with:
           channel: 'stable'
       - name: Get packages
-      - run: flutter pub get
+        run: flutter pub get
       - name: Analyze
-      - run: flutter analyze
+        run: flutter analyze
       - name: Test
-      - run: flutter test
+        run: flutter test
       - name: Build
-      - run: flutter build apk
-      - run: flutter build appbundle
+        run: flutter build apk
+      - name: Build bundle
+        run: flutter build appbundle
