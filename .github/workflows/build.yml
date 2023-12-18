@@ -43,8 +43,7 @@ jobs:
   Publish:
     needs: ['Build']
     runs-on: ubuntu-latest
-    permissions: 
-      contents: write
+    permissions: write-all
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v2
