@@ -7,7 +7,7 @@ name: Dart
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "**" ]
   pull_request:
     branches: [ "main" ]
 
@@ -17,14 +17,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
       - uses: subosito/flutter-action@v2.12.0
         with:
           channel: 'stable'
+          
       - name: Get packages
         run: flutter pub get
       - name: Create env file
@@ -34,7 +30,3 @@ jobs:
       #   run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Build
-        run: flutter build apk
-      - name: Build bundle
-        run: flutter build appbundle
