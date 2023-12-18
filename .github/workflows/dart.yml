@@ -27,6 +27,9 @@ jobs:
           channel: 'stable'
       - name: Get packages
         run: flutter pub get
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
       - name: Analyze
         run: flutter analyze
       - name: Test
