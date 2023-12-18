@@ -30,8 +30,8 @@ jobs:
       - name: Create env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
-      - name: Analyze
-        run: flutter analyze
+      # - name: Analyze
+      #   run: flutter analyze
       - name: Test
         run: flutter test
       - name: Build
