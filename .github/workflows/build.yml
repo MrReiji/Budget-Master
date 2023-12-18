@@ -6,10 +6,6 @@
 name: Build
 
 on:
-  workflow_run:
-    branches: ['main']
-    workflows: ['Test']
-    types: ['completed']
   workflow_dispatch:
     
 
@@ -53,11 +49,23 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v2
     - name: Delete tag and release
-      run: gh release delete bleeding-edge -y
+      uses: dev-drprasad/delete-tag-and-release@v1.0
+      with:
+        delete_release: true # default: false
+        tag_name: bleeding-edge # tag name to delete
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Release
-      run: gh release create bleeding-edge */* --notes "Automatically generated bleeding edge release"
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: bleeding-edge
+        name: Bleeding Edge
+        prerelease: false
+        fail_on_unmatched_files: true
+        files: |
+          */*
+        body: | 
+          Automatically generated bleeding edge release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
