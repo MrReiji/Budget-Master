@@ -1,0 +1,32 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Test
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.12.0
+        with:
+          channel: 'stable'
+          
+      - name: Get packages
+        run: flutter pub get
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+      # - name: Analyze
+      #   run: flutter analyze
+      - name: Test
+        run: flutter test
