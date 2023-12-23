@@ -93,7 +93,7 @@ class AuthScreen extends StatelessWidget {
                             text: "Create an Account",
                             type: ButtonType.PRIMARY,
                             onPressed: () {
-                              context.push(AppRouterPaths.login);
+                              context.push(AppRouterPaths.signUp);
                             },
                           )
                         ],

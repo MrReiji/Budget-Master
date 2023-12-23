@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// final _firebase = FirebaseAuth.instance;
+final _firebase = FirebaseAuth.instance;
 
 class LoginFormBloc extends FormBloc<String, String> {
   final email = TextFieldBloc(
@@ -34,20 +34,16 @@ class LoginFormBloc extends FormBloc<String, String> {
     debugPrint(password.value);
 
     try {
-      // final userCredentials = await _firebase.signInWithEmailAndPassword(
-      //     email: email.value, password: password.value);
-      // debugPrint(userCredentials.toString());
+      final userCredentials = await _firebase.signInWithEmailAndPassword(
+          email: email.value, password: password.value);
+      debugPrint(userCredentials.toString());
       debugPrint("Logged in");
       emitSuccess();
+    } on FirebaseAuthException catch (_) {
+      emitFailure(
+          failureResponse: "Invalid email or password. Please try again.");
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
-    // } on FirebaseAuthException catch (error) {
-    //   if (error.code == 'user-not-found') {
-    //     emitFailure(failureResponse: "User not found. Create an account!");
-    //   } else {
-    //     emitFailure(failureResponse: "Authentication failed");
-    //   }
-    // }
   }
 }

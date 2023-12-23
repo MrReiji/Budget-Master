@@ -1,5 +1,6 @@
 import 'package:budget_master/screens/login_screen.dart';
 import 'package:budget_master/screens/receipt_screen.dart';
+import 'package:budget_master/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,10 +34,10 @@ class AppRouter {
             return const LoginScreen();
           }),
       GoRoute(
-          name: 'sign-up',
-          path: AppRouterPaths.sign_up,
+          name: 'signUp',
+          path: AppRouterPaths.signUp,
           builder: (BuildContext context, GoRouterState state) {
-            return const LoginScreen();
+            return const SignUpScreen();
           }),
       GoRoute(
           name: 'receipt',

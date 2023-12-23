@@ -37,6 +37,7 @@ class InputWidget extends StatelessWidget {
             child: TextFieldBlocBuilder(
               textFieldBloc: textFieldBloc,
               keyboardType: TextInputType.emailAddress,
+              obscureText: obscureText,
               autofillHints: autofillHints,
               decoration: InputDecoration(
                 prefixIcon: Icon(
