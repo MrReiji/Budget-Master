@@ -11,6 +11,7 @@ class InputWidget extends StatelessWidget {
   final bool obscureText;
   final Iterable<String>? autofillHints;
   final TextFieldBloc<dynamic> textFieldBloc;
+  final TextInputType? textInputType;
 
   InputWidget({
     this.hintText,
@@ -20,6 +21,7 @@ class InputWidget extends StatelessWidget {
     this.obscureText = false,
     this.autofillHints,
     required this.textFieldBloc,
+    this.textInputType,
   });
   @override
   Widget build(BuildContext context) {
@@ -36,9 +38,9 @@ class InputWidget extends StatelessWidget {
             ),
             child: TextFieldBlocBuilder(
               textFieldBloc: textFieldBloc,
-              keyboardType: TextInputType.emailAddress,
               obscureText: obscureText,
               autofillHints: autofillHints,
+              keyboardType: textInputType,
               decoration: InputDecoration(
                 prefixIcon: Icon(
                   this.prefixIcon,
@@ -70,30 +72,6 @@ class InputWidget extends StatelessWidget {
                   color: Color.fromRGBO(105, 108, 121, 0.7),
                 ),
               ),
-              // child: TextFormField(
-              //   obscureText: this.obscureText,
-              // decoration: InputDecoration(
-              //   prefixIcon: Icon(
-              //     this.prefixIcon,
-              //     color: Color.fromRGBO(105, 108, 121, 1),
-              //   ),
-              //     enabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(
-              //         color: Color.fromRGBO(74, 77, 84, 0.2),
-              //       ),
-              //     ),
-              //     focusedBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(
-              //         color: Constants.primaryColor,
-              //       ),
-              //     ),
-              //     hintText: this.hintText,
-              //     hintStyle: TextStyle(
-              //       fontSize: 14.0,
-              //       color: Color.fromRGBO(105, 108, 121, 0.7),
-              //     ),
-              //   ),
-              // ),
             ),
           ),
         ),
