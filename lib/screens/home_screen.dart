@@ -1,6 +1,8 @@
+import 'package:budget_master/utils/firebase/getCurrentUsername.dart';
 import 'package:budget_master/widgets/latest_receipts.dart';
 import 'package:budget_master/widgets/navbar_items.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Track active index
   int activeIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -59,31 +60,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Welcome Back,\n",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                              ),
-                              TextSpan(
-                                text: "TODO:FirebaseUserName!",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              )
-                            ],
-                          ),
-                        ),
+                        FutureBuilder<String?>(
+                            future: getCurrentUsername(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else {
+                                return RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Welcome Back,\n",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                      TextSpan(
+                                        text: "${snapshot.data ?? 'User'}!",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            }),
                         Image.asset(
                           "assets/profile.png",
                           scale: 6,
