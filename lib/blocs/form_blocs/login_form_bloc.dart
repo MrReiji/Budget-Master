@@ -38,10 +38,10 @@ class LoginFormBloc extends FormBloc<String, String> {
           email: email.value, password: password.value);
       debugPrint(userCredentials.toString());
       debugPrint("Logged in");
-      emitSuccess();
+      emitSuccess(successResponse: "You have logged in successfully!");
     } on FirebaseAuthException catch (_) {
       emitFailure(
-          failureResponse: "Invalid email or password. Please try again.");
+          failureResponse: "Invalid email or password. Please try again!");
     } catch (error) {
       debugPrint(error.toString());
     }

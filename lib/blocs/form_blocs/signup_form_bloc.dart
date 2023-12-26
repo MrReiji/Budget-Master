@@ -71,7 +71,7 @@ class SignUpFormBloc extends FormBloc<String, String> {
       if (error.code == 'email-already-in-use') {
         emitFailure(failureResponse: "Email already in use. Sign in!");
       } else {
-        emitFailure(failureResponse: "Authentication failed");
+        emitFailure(failureResponse: "Authentication failed!");
       }
     } catch (error) {
       debugPrint(error.toString());

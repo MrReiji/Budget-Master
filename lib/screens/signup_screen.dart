@@ -118,6 +118,7 @@ class SignUpScreen extends StatelessWidget {
                                   topLabel: "Email",
                                   hintText: "Enter your email address",
                                   prefixIcon: Icons.email_outlined,
+                                  textInputType: TextInputType.emailAddress,
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
@@ -131,6 +132,7 @@ class SignUpScreen extends StatelessWidget {
                                   obscureText: true,
                                   hintText: "Enter your password",
                                   prefixIcon: Icons.lock_outlined,
+                                  textInputType: TextInputType.visiblePassword,
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
@@ -143,6 +145,7 @@ class SignUpScreen extends StatelessWidget {
                                   topLabel: "Confirm Password",
                                   obscureText: true,
                                   hintText: "Confirm your password",
+                                  textInputType: TextInputType.visiblePassword,
                                   prefixIcon: Icons.lock_outlined,
                                   autofillHints: const [
                                     AutofillHints.password,
