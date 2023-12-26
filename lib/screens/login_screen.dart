@@ -1,4 +1,6 @@
 import 'package:budget_master/blocs/form_blocs/login_form_bloc.dart';
+import 'package:budget_master/utils/firebase/resetPassword.dart';
+import 'package:budget_master/widgets/reset_password_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -106,6 +108,7 @@ class LoginScreen extends StatelessWidget {
                                   topLabel: "Email",
                                   hintText: "Enter your email address",
                                   prefixIcon: Icons.email_outlined,
+                                  textInputType: TextInputType.emailAddress,
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
@@ -119,6 +122,7 @@ class LoginScreen extends StatelessWidget {
                                   obscureText: true,
                                   hintText: "Enter your password",
                                   prefixIcon: Icons.lock_outlined,
+                                  textInputType: TextInputType.visiblePassword,
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
@@ -128,7 +132,12 @@ class LoginScreen extends StatelessWidget {
                                   height: 15.0,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => ResetPasswordForm(),
+                                    );
+                                  },
                                   child: Text(
                                     "Forgot Password?",
                                     textAlign: TextAlign.right,
