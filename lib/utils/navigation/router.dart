@@ -1,6 +1,8 @@
+import 'package:budget_master/pages/add_expense_page.dart';
 import 'package:budget_master/screens/login_screen.dart';
 import 'package:budget_master/screens/receipt_screen.dart';
 import 'package:budget_master/screens/signup_screen.dart';
+import 'package:budget_master/utils/navigation/router_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,8 +12,8 @@ import 'app_router_paths.dart';
 
 class AppRouter {
   static final router = GoRouter(
-    //refreshListenable: RouterNotifier(),
-    //redirect: RouterNotifier().redirect,
+    refreshListenable: RouterNotifier(),
+    redirect: RouterNotifier().redirect,
     debugLogDiagnostics: true,
     initialLocation: AppRouterPaths.auth,
     routes: [
@@ -44,6 +46,12 @@ class AppRouter {
           path: AppRouterPaths.receipt,
           builder: (BuildContext context, GoRouterState state) {
             return const ReceiptScreen();
+          }),
+      GoRoute(
+          name: 'add_expense',
+          path: AppRouterPaths.add_expense,
+          builder: (BuildContext context, GoRouterState state) {
+            return const AddExpensePage();
           }),
     ],
   );
