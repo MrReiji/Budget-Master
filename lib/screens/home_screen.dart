@@ -1,13 +1,7 @@
-import 'package:budget_master/pages/Pages_list.dart';
-import 'package:budget_master/pages/home_page.dart';
-import 'package:budget_master/utils/firebase/getCurrentUsername.dart';
-import 'package:budget_master/utils/navigation/app_router_paths.dart';
-import 'package:budget_master/widgets/latest_receipts.dart';
+import 'package:budget_master/utils/page_manager.dart';
 import 'package:budget_master/widgets/navbar_items.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../utils/constants.dart';
 
@@ -36,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Constants.primaryColor,
       body: IndexedStack(
         index: activeIndex,
-        children: pagesList,
+        children: PageManager.getPages(),
       ),
     );
   }

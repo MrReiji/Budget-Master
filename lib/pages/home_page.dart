@@ -2,7 +2,6 @@ import 'package:budget_master/utils/constants.dart';
 import 'package:budget_master/utils/firebase/getCurrentUsername.dart';
 import 'package:budget_master/widgets/latest_receipts.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
