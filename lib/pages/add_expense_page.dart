@@ -17,7 +17,7 @@ class AddExpensePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ExpenseFormBloc(),
       child: Builder(builder: (context) {
-        final receiptFormBloc = context.read<ExpenseFormBloc>();
+        final expenseFormBloc = context.read<ExpenseFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
@@ -97,7 +97,7 @@ class AddExpensePage extends StatelessWidget {
                                   topLabel: "Name",
                                   hintText: "Enter your expense name",
                                   prefixIcon: Icons.apple,
-                                  textFieldBloc: receiptFormBloc.productName,
+                                  textFieldBloc: expenseFormBloc.productName,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -110,7 +110,7 @@ class AddExpensePage extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.transactionAmount,
                                   ],
-                                  textFieldBloc: receiptFormBloc.price,
+                                  textFieldBloc: expenseFormBloc.price,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -124,7 +124,7 @@ class AddExpensePage extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.location,
                                   ],
-                                  textFieldBloc: receiptFormBloc.store,
+                                  textFieldBloc: expenseFormBloc.store,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -134,14 +134,14 @@ class AddExpensePage extends StatelessWidget {
                                   hintText: "Enter the date of purchase",
                                   textInputType: TextInputType.datetime,
                                   prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: receiptFormBloc.purchaseDate,
+                                  textFieldBloc: expenseFormBloc.purchaseDate,
                                 ),
                                 InputWidget(
                                   topLabel: "Category",
-                                  hintText: "Enter the expense categories",
-                                  textInputType: TextInputType.datetime,
-                                  prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: receiptFormBloc.store,
+                                  hintText: "Enter the expense category",
+                                  textInputType: TextInputType.text,
+                                  prefixIcon: Icons.category_outlined,
+                                  textFieldBloc: expenseFormBloc.category,
                                 ),
                                 SizedBox(
                                   height: 15.0,
@@ -151,7 +151,7 @@ class AddExpensePage extends StatelessWidget {
                                   hintText: "Enter description if needed",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.description_rounded,
-                                  textFieldBloc: receiptFormBloc.description,
+                                  textFieldBloc: expenseFormBloc.description,
                                 ),
                                 SizedBox(
                                   height: 15.0,
@@ -160,7 +160,7 @@ class AddExpensePage extends StatelessWidget {
                                   type: ButtonType.PRIMARY,
                                   text: "Add expense!",
                                   onPressed: () {
-                                    receiptFormBloc.submit();
+                                    expenseFormBloc.submit();
                                   },
                                 )
                               ],
