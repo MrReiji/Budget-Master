@@ -121,7 +121,6 @@ class LatestReceipts extends StatelessWidget {
             ),
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              // Lets pass the order to a new widget and render it there
               return ReceiptCard(
                 order: receipts[index],
               );

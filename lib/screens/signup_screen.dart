@@ -163,10 +163,6 @@ class SignUpScreen extends StatelessWidget {
                                   text: "Sign up",
                                   onPressed: () {
                                     signUpFormBloc.submit();
-                                    debugPrint(signUpFormBloc.email.value);
-                                    debugPrint(signUpFormBloc.password.value);
-                                    debugPrint(
-                                        signUpFormBloc.confirmPassword.value);
 
                                     debugPrint("Sign up Button pressed");
                                     // context
