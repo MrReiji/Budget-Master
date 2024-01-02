@@ -1,20 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:budget_master/firebase_options.dart'; // Ensure this path is correct
 import 'package:budget_master/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  // Initialize Firebase before running any tests
+  setUpAll(() async {
+    await dotenv.load(fileName: ".env");
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  });
+
+  // Define a widget test
+  testWidgets('Home screen welcome message test', (WidgetTester tester) async {
+    // Build the app and trigger a frame
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('Log In'), findsOneWidget);
+    // Verify that the welcome message "Welcome Back" is present on the screen
+    expect(find.text("Welcome Back"), findsOneWidget);
   });
 }
