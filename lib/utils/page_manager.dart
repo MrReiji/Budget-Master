@@ -1,4 +1,5 @@
 import 'package:budget_master/pages/add_expense_page.dart';
+import 'package:budget_master/pages/add_receipt_page.dart';
 import 'package:budget_master/pages/home_page.dart';
 import 'package:budget_master/pages/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ class PageManager {
   static final List<Widget> _pages = [
     const HomePage(), // For index 0
     const HomePage(), // For index 1
-    const AddExpensePage(), // For index 2
+    const AddReceiptPage(), // For index 2
     const HomePage(), // For index 3
     const SettingsPage(), // For index 4
   ];
