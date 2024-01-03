@@ -26,6 +26,33 @@ Application aims to provide users with:
 - An increase in the number of users setting and adhering to monthly expense limits.
 
 ## Contributors
-<a href="https://github.com/MrReiji/Budget-Master/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=MrReiji/Budget-Master" />
-</a>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/MrReiji">
+        <img src="https://avatars.githubusercontent.com/u/64375466?s=400&u=53e7843968d846da2044d64797fd672e07b852a9&v=4" width="80" height="80" style="border-radius: 50%;" /><br>
+        MrReiji
+      </a>
+    </td>
+        <td align="center">
+      <a href="https://github.com/pangandalf">
+        <img src="https://avatars.githubusercontent.com/u/72980134?v=4" width="80" height="80" style="border-radius: 50%;" /><br>
+        pangandalf
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/SX-7">
+        <img src="https://avatars.githubusercontent.com/u/92227810?v=4" width="80" height="80" style="border-radius: 50%;" /><br>
+        SX-7
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/hubert276">
+        <img src="https://avatars.githubusercontent.com/u/115274724?v=4" width="80" height="80" style="border-radius: 50%;" /><br>
+        hubert276
+      </a>
+    </td>
+  </tr>
+</table>
+
+
