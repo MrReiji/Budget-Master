@@ -24,3 +24,8 @@ Application aims to provide users with:
 - Time-saving features, such as automatic data entry.
 - Reduction in unplanned expenses and improvement in the regularity of tracking expenses.
 - An increase in the number of users setting and adhering to monthly expense limits.
+
+## Contributors
+<a href = "https://github.com/MrReiji/Budget-Master/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo = MrReiji/Budget-Master"/>
+</a>
