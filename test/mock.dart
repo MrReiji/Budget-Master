@@ -12,7 +12,6 @@ typedef Callback = void Function(MethodCall call);
 
 void setupFirebaseAuthMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   setupFirebaseCoreMocks();
 }
 

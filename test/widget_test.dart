@@ -59,9 +59,9 @@ void main() {
     await tester.pumpWidget(const MyApp());
     expect(find.byType(AuthScreen), findsOne);
 
-    await tester.tap(find.byWidgetPredicate(
-      (Widget widget) => widget is AppButton && RegExp("[Cc]reate.*[Aa]ccount").hasMatch(widget.text)
-    ));
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is AppButton &&
+        RegExp("[Cc]reate.*[Aa]ccount").hasMatch(widget.text)));
     await tester.pumpAndSettle();
     expect(find.byType(SignUpScreen), findsOne);
 
@@ -71,11 +71,13 @@ void main() {
   });
 
   testWidgets('Router paths test', (WidgetTester tester) async {
-    for (var route in AppRouter.router.configuration.routes){
+    for (var route in AppRouter.router.configuration.routes) {
       var fixRoute = route as GoRoute; // I hate how this works here
       expect(fixRoute.name, isNotNull);
       expect(fixRoute.path, isNotNull);
       expect(fixRoute.builder, isNotNull);
     }
   });
+
+  
 }
