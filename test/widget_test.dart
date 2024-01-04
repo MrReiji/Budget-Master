@@ -1,12 +1,14 @@
 import 'package:budget_master/screens/auth_screen.dart';
 import 'package:budget_master/screens/login_screen.dart';
 import 'package:budget_master/screens/signup_screen.dart';
+import 'package:budget_master/utils/navigation/router.dart';
 import 'package:budget_master/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:budget_master/main.dart';
+import 'package:go_router/go_router.dart';
 import './mock.dart';
 
 void main() {
@@ -66,5 +68,14 @@ void main() {
     await tester.tap(find.byIcon(Icons.keyboard_backspace_rounded));
     await tester.pumpAndSettle();
     expect(find.byType(AuthScreen), findsOne);
+  });
+
+  testWidgets('Router paths test', (WidgetTester tester) async {
+    for (var route in AppRouter.router.configuration.routes){
+      var fixRoute = route as GoRoute; // I hate how this works here
+      expect(fixRoute.name, isNotNull);
+      expect(fixRoute.path, isNotNull);
+      expect(fixRoute.builder, isNotNull);
+    }
   });
 }
