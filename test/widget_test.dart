@@ -1,4 +1,7 @@
+import 'package:budget_master/screens/auth_screen.dart';
 import 'package:budget_master/screens/login_screen.dart';
+import 'package:budget_master/screens/signup_screen.dart';
+import 'package:budget_master/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,19 +30,41 @@ void main() {
     expect(find.text("Create an Account"), findsOneWidget);
   });
 
-  testWidgets('Auth screen navigation test', (WidgetTester tester) async
-  { 
+  testWidgets('Login screen navigation test', (WidgetTester tester) async {
+    // Fixes sizing issue in test
     WidgetController.hitTestWarningShouldBeFatal = true;
-    tester.view.physicalSize = const Size(2400, 1080);
+    tester.view.physicalSize = const Size(1080, 2220);
     tester.view.devicePixelRatio = 1.0;
-    
+
     await tester.pumpWidget(const MyApp());
+    expect(find.byType(AuthScreen), findsOne);
 
-    await tester.tap(find.bySemanticsLabel("Log In"));
-
+    await tester.tap(find.bySemanticsLabel(RegExp("[Ll]og.*[Ii]n")));
     await tester.pumpAndSettle();
-
     expect(find.byType(LoginScreen), findsOne);
+
+    await tester.tap(find.byIcon(Icons.keyboard_backspace_rounded));
+    await tester.pumpAndSettle();
+    expect(find.byType(AuthScreen), findsOne);
   });
 
+  testWidgets('Signup screen navigation test', (WidgetTester tester) async {
+    // Fixes sizing issue in test
+    WidgetController.hitTestWarningShouldBeFatal = true;
+    tester.view.physicalSize = const Size(1080, 2220);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(const MyApp());
+    expect(find.byType(AuthScreen), findsOne);
+
+    await tester.tap(find.byWidgetPredicate(
+      (Widget widget) => widget is AppButton && RegExp("[Cc]reate.*[Aa]ccount").hasMatch(widget.text)
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byType(SignUpScreen), findsOne);
+
+    await tester.tap(find.byIcon(Icons.keyboard_backspace_rounded));
+    await tester.pumpAndSettle();
+    expect(find.byType(AuthScreen), findsOne);
+  });
 }
