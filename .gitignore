@@ -46,3 +46,6 @@ app.*.map.json
 
 devtools_options.yaml
 .github/
+
+# test coverage data
+coverage/lcov.info
