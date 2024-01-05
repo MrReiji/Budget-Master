@@ -12,14 +12,17 @@ class RouterNotifier extends ChangeNotifier {
   }
 
   String? redirect(BuildContext context, GoRouterState state) {
+    final currentScreen = state.fullPath!;
     // Check if the current screen is one of the auth-related screens
-    final isAuthScreen =
-        ['/auth', '/login', '/signUp'].contains(state.fullPath);
+    final isAuthScreen = ['/auth', '/login', '/signUp'].contains(currentScreen);
 
     // If the user is logged in and currently on an auth-related screen, redirect to the HomeScreen
     if (_firebase.currentUser != null && isAuthScreen) {
-      debugPrint(state.fullPath);
-      return AppRouterPaths.home;
+      debugPrint(currentScreen);
+      Future.delayed(Duration(milliseconds: 0), () {
+        return AppRouterPaths.home;
+      });
+      //return AppRouterPaths.home;
     }
 
     // If the user is logged out and not on an auth-related screen, redirect to the AuthScreen
