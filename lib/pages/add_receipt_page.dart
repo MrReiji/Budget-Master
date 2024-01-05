@@ -65,9 +65,9 @@ class AddReceiptPage extends StatelessWidget {
                                     .textTheme
                                     .titleLarge
                                     ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                               )
                             ],
                           ),
@@ -80,7 +80,7 @@ class AddReceiptPage extends StatelessWidget {
                             width: double.infinity,
                             constraints: BoxConstraints(
                               minHeight:
-                              MediaQuery.of(context).size.height - 180.0,
+                                  MediaQuery.of(context).size.height - 180.0,
                             ),
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
@@ -132,21 +132,25 @@ class AddReceiptPage extends StatelessWidget {
                                 const SizedBox(
                                   height: 5.0,
                                 ),
-                                BlocBuilder<ListFieldBloc<ProductFieldBloc, dynamic>,
-                                    ListFieldBlocState<ProductFieldBloc, dynamic>>(
+                                BlocBuilder<
+                                    ListFieldBloc<ProductFieldBloc, dynamic>,
+                                    ListFieldBlocState<ProductFieldBloc,
+                                        dynamic>>(
                                   bloc: receiptFormBloc.product,
                                   builder: (context, state) {
                                     if (state.fieldBlocs.isNotEmpty) {
                                       return ListView.builder(
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         itemCount: state.fieldBlocs.length,
                                         itemBuilder: (context, i) {
                                           return ProductCard(
                                             productIndex: i,
                                             productField: state.fieldBlocs[i],
                                             onRemoveProduct: () =>
-                                                receiptFormBloc.removeProduct(i),
+                                                receiptFormBloc
+                                                    .removeProduct(i),
                                           );
                                         },
                                       );
@@ -163,19 +167,30 @@ class AddReceiptPage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8.0),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
                                           width: 100.0,
                                           color: Colors.black,
                                         ),
-                                        const SizedBox(width: 8.0),
-                                        const Text(
-                                          'and/or',
-                                          style: TextStyle(fontSize: 16),
+                                        const SizedBox(width: 4.0),
+                                        const Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'and/or',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            Text(
+                                              'Add receipt photo',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 8.0),
+                                        const SizedBox(width: 4.0),
                                         Container(
                                           height: 1.0,
                                           width: 100.0,
@@ -184,13 +199,24 @@ class AddReceiptPage extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 8.0),
-                                    const ElevatedButton(
-                                      onPressed: null, //TODO addPhoto
-                                      child: Text('Add receipt photo'),
+                                    const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: null, //TODO addPhoto
+                                          child: Text('From gallery'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: null, //TODO addPhoto
+                                          child: Text('Using camera'),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 16.0),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
