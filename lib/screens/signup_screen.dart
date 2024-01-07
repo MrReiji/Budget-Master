@@ -30,8 +30,8 @@ class SignUpScreen extends StatelessWidget {
             },
             onSuccess: (context, state) {
               LoadingDialog.hide(context);
-
-              context.push(AppRouterPaths.home);
+              // Navigation to home is handled by RouterNotifier's redirect.
+              // context.push(AppRouterPaths.home);
             },
             onFailure: (context, state) {
               LoadingDialog.hide(context);
