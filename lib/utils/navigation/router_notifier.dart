@@ -18,11 +18,7 @@ class RouterNotifier extends ChangeNotifier {
 
     // If the user is logged in and currently on an auth-related screen, redirect to the HomeScreen
     if (_firebase.currentUser != null && isAuthScreen) {
-      debugPrint(currentScreen);
-      Future.delayed(Duration(milliseconds: 0), () {
-        return AppRouterPaths.home;
-      });
-      //return AppRouterPaths.home;
+      return AppRouterPaths.home;
     }
 
     // If the user is logged out and not on an auth-related screen, redirect to the AuthScreen
