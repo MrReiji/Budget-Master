@@ -32,7 +32,7 @@ jobs:
       # - name: Analyze code
       #   run: flutter analyze
       - name: Add relevant vars to env
-        run: export FIREBASE_TOKEN=$(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)
+        run: echo "FIREBASE_TOKEN=$(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)" >> $GITHUB_ENV
       - name: Prep firebase
         run: firebase init
       - run: firebase init emulators
