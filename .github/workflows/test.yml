@@ -21,13 +21,10 @@ jobs:
       - uses: subosito/flutter-action@v2.12.0
         with:
           channel: 'stable'
-          
       - name: Get packages
         run: flutter pub get
       - name: Create env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
-      # - name: Analyze code
-      #   run: flutter analyze
       - name: Test
         run: flutter test
