@@ -32,8 +32,7 @@ jobs:
       # - name: Analyze code
       #   run: flutter analyze
       - name: Prep firebase
-        run: firebase init --token $(grep -Po '(?<=FIREBASE_TOKEN\s=).*' .env --color=never)
-      - run: firebase init emulators --token $(grep -Po '(?<=FIREBASE_TOKEN\s=).*' .env --color=never)
+        run: firebase init emulators --token $(grep -Po '(?<=FIREBASE_TOKEN\s=).*' .env --color=never)
       - run: firebase emulators:start --token $(grep -Po '(?<=FIREBASE_TOKEN\s=).*' .env --color=never)
       - name: Test
         run: flutter test
