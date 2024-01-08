@@ -18,10 +18,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
       - uses: subosito/flutter-action@v2.12.0
         with:
           channel: 'stable'
-          
+      - name: Get firebase tools
+        run: npm install -g firebase-tools
       - name: Get packages
         run: flutter pub get
       - name: Create env file
@@ -29,5 +31,12 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
       # - name: Analyze code
       #   run: flutter analyze
+      - name: Add relevant vars to env
+        run: export FIREBASE_TOKEN=$(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)
+      - name: Prep firebase
+        run: firebase login:ci
+      - run: firebase init
+      - run: firebase init emulators
+      - run: firebase emulators:start
       - name: Test
         run: flutter test
