@@ -31,11 +31,9 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
       # - name: Analyze code
       #   run: flutter analyze
-      - name: Add relevant vars to env
-        run: echo "FIREBASE_TOKEN=$(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)" >> $GITHUB_ENV
       - name: Prep firebase
-        run: firebase init
-      - run: firebase init emulators
-      - run: firebase emulators:start
+        run: firebase init --token $(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)
+      - run: firebase init emulators --token $(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)
+      - run: firebase emulators:start --token $(grep -Po '(?<=FIREBASE_TOKEN=).*' .env --color=never)
       - name: Test
         run: flutter test
