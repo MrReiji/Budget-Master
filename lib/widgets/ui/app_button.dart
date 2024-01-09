@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:budget_master/utils/constants.dart';
+import 'package:budget_master/constants/constants.dart';
 
 enum ButtonType { PRIMARY, PLAIN }
 

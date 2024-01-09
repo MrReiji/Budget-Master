@@ -1,8 +1,8 @@
-import 'package:budget_master/screens/auth_screen.dart';
-import 'package:budget_master/screens/login_screen.dart';
-import 'package:budget_master/screens/signup_screen.dart';
+import 'package:budget_master/screens/auth/auth_screen.dart';
+import 'package:budget_master/screens/auth/login_screen.dart';
+import 'package:budget_master/screens/auth/signup_screen.dart';
 import 'package:budget_master/utils/navigation/router.dart';
-import 'package:budget_master/widgets/app_button.dart';
+import 'package:budget_master/widgets/ui_elements/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,6 +78,4 @@ void main() {
       expect(fixRoute.builder, isNotNull);
     }
   });
-
-  
 }

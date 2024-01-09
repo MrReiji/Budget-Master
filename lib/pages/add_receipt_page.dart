@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
+import '../constants/constants.dart';
 import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../widgets/ui_elements/app_button.dart';
+import '../widgets/forms/input_widget.dart';
+import '../widgets/dialogs/loading_dialog.dart';
 
 class AddReceiptPage extends StatelessWidget {
   const AddReceiptPage({super.key});

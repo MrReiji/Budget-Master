@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
-import '../utils/constants.dart';
+import '../../constants/constants.dart';
 
 class InputWidget extends StatelessWidget {
   final String? hintText;

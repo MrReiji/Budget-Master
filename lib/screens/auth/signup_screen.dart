@@ -1,29 +1,27 @@
-import 'package:budget_master/blocs/form_blocs/login_form_bloc.dart';
-import 'package:budget_master/utils/firebase/resetPassword.dart';
-import 'package:budget_master/widgets/reset_password_form.dart';
+import 'package:budget_master/blocs/form_blocs/auth/signup_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
-import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../../constants/constants.dart';
+import '../../utils/navigation/app_router_paths.dart';
+import '../../widgets/ui_elements/app_button.dart';
+import '../../widgets/forms/input_widget.dart';
+import '../../widgets/dialogs/loading_dialog.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginFormBloc(),
+      create: (context) => SignUpFormBloc(),
       child: Builder(builder: (context) {
-        final loginFormBloc = context.read<LoginFormBloc>();
+        final signUpFormBloc = context.read<SignUpFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
-          body: FormBlocListener<LoginFormBloc, String, String>(
+          body: FormBlocListener<SignUpFormBloc, String, String>(
             onSubmitting: (context, state) {
               LoadingDialog.show(context);
             },
@@ -32,9 +30,8 @@ class LoginScreen extends StatelessWidget {
             },
             onSuccess: (context, state) {
               LoadingDialog.hide(context);
-
               // Navigation to home is handled by RouterNotifier's redirect.
-              //context.push(AppRouterPaths.home);
+              // context.push(AppRouterPaths.home);
             },
             onFailure: (context, state) {
               LoadingDialog.hide(context);
@@ -72,7 +69,7 @@ class LoginScreen extends StatelessWidget {
                                 height: 20.0,
                               ),
                               Text(
-                                "Log in to your account",
+                                "Create an Account!",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
@@ -106,6 +103,18 @@ class LoginScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 InputWidget(
+                                  topLabel: "Username",
+                                  hintText: "Enter your username",
+                                  prefixIcon: Icons.person_outlined,
+                                  autofillHints: const [
+                                    AutofillHints.newUsername,
+                                  ],
+                                  textFieldBloc: signUpFormBloc.username,
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                InputWidget(
                                   topLabel: "Email",
                                   hintText: "Enter your email address",
                                   prefixIcon: Icons.email_outlined,
@@ -113,10 +122,10 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
-                                  textFieldBloc: loginFormBloc.email,
+                                  textFieldBloc: signUpFormBloc.email,
                                 ),
                                 SizedBox(
-                                  height: 25.0,
+                                  height: 5.0,
                                 ),
                                 InputWidget(
                                   topLabel: "Password",
@@ -127,36 +136,35 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: loginFormBloc.password,
+                                  textFieldBloc: signUpFormBloc.password,
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                InputWidget(
+                                  topLabel: "Confirm Password",
+                                  obscureText: true,
+                                  hintText: "Confirm your password",
+                                  textInputType: TextInputType.visiblePassword,
+                                  prefixIcon: Icons.lock_outlined,
+                                  autofillHints: const [
+                                    AutofillHints.password,
+                                  ],
+                                  textFieldBloc: signUpFormBloc.confirmPassword,
                                 ),
                                 SizedBox(
                                   height: 15.0,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => ResetPasswordForm(),
-                                    );
-                                  },
-                                  child: Text(
-                                    "Forgot Password?",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: Constants.primaryColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
                                 ),
                                 SizedBox(
                                   height: 20.0,
                                 ),
                                 AppButton(
                                   type: ButtonType.PRIMARY,
-                                  text: "Log In",
+                                  text: "Sign up",
                                   onPressed: () {
-                                    loginFormBloc.submit();
-                                    debugPrint("Log in Button pressed");
+                                    signUpFormBloc.submit();
+
+                                    debugPrint("Sign up Button pressed");
                                     // context
                                     //     .pushReplacement(AppRouterPaths.home);
                                   },

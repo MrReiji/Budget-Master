@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/order.dart';
-import '../utils/constants.dart';
+import '../../models/order.dart';
+import '../../constants/constants.dart';
 import 'receipt_card.dart';
 
 class LatestReceipts extends StatelessWidget {

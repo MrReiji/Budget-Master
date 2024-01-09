@@ -1,27 +1,29 @@
-import 'package:budget_master/blocs/form_blocs/expense_form_bloc.dart';
+import 'package:budget_master/blocs/form_blocs/auth/login_form_bloc.dart';
+import 'package:budget_master/utils/firebase/resetPassword.dart';
+import 'package:budget_master/widgets/forms/reset_password_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
-import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../../constants/constants.dart';
+import '../../utils/navigation/app_router_paths.dart';
+import '../../widgets/ui_elements/app_button.dart';
+import '../../widgets/forms/input_widget.dart';
+import '../../widgets/dialogs/loading_dialog.dart';
 
-class AddExpensePage extends StatelessWidget {
-  const AddExpensePage({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ExpenseFormBloc(),
+      create: (context) => LoginFormBloc(),
       child: Builder(builder: (context) {
-        final expenseFormBloc = context.read<ExpenseFormBloc>();
+        final loginFormBloc = context.read<LoginFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
-          body: FormBlocListener<ExpenseFormBloc, String, String>(
+          body: FormBlocListener<LoginFormBloc, String, String>(
             onSubmitting: (context, state) {
               LoadingDialog.show(context);
             },
@@ -31,7 +33,8 @@ class AddExpensePage extends StatelessWidget {
             onSuccess: (context, state) {
               LoadingDialog.hide(context);
 
-              context.push(AppRouterPaths.home);
+              // Navigation to home is handled by RouterNotifier's redirect.
+              //context.push(AppRouterPaths.home);
             },
             onFailure: (context, state) {
               LoadingDialog.hide(context);
@@ -56,11 +59,20 @@ class AddExpensePage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              GestureDetector(
+                                onTap: () {
+                                  context.pop();
+                                },
+                                child: Icon(
+                                  Icons.keyboard_backspace_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
                               SizedBox(
-                                height: 35,
+                                height: 20.0,
                               ),
                               Text(
-                                "Enter your expense!",
+                                "Log in to your account",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
@@ -94,73 +106,59 @@ class AddExpensePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 InputWidget(
-                                  topLabel: "Name",
-                                  hintText: "Enter your expense name",
-                                  prefixIcon: Icons.apple,
-                                  textFieldBloc: expenseFormBloc.productName,
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                InputWidget(
-                                  topLabel: "Price",
-                                  hintText: "Enter your expense price",
-                                  prefixIcon: Icons.attach_money_rounded,
-                                  textInputType: TextInputType.number,
+                                  topLabel: "Email",
+                                  hintText: "Enter your email address",
+                                  prefixIcon: Icons.email_outlined,
+                                  textInputType: TextInputType.emailAddress,
                                   autofillHints: const [
-                                    AutofillHints.transactionAmount,
+                                    AutofillHints.email,
                                   ],
-                                  textFieldBloc: expenseFormBloc.price,
+                                  textFieldBloc: loginFormBloc.email,
                                 ),
                                 SizedBox(
-                                  height: 5.0,
+                                  height: 25.0,
                                 ),
                                 InputWidget(
-                                  topLabel: "Store",
-                                  hintText:
-                                      "Enter the store name where the purchase was made",
-                                  prefixIcon: Icons.store,
-                                  textInputType: TextInputType.streetAddress,
+                                  topLabel: "Password",
+                                  obscureText: true,
+                                  hintText: "Enter your password",
+                                  prefixIcon: Icons.lock_outlined,
+                                  textInputType: TextInputType.visiblePassword,
                                   autofillHints: const [
-                                    AutofillHints.location,
+                                    AutofillHints.password,
                                   ],
-                                  textFieldBloc: expenseFormBloc.store,
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                InputWidget(
-                                  topLabel: "Date of purchase",
-                                  hintText: "Enter the date of purchase",
-                                  textInputType: TextInputType.datetime,
-                                  prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: expenseFormBloc.purchaseDate,
-                                ),
-                                InputWidget(
-                                  topLabel: "Category",
-                                  hintText: "Enter the expense category",
-                                  textInputType: TextInputType.text,
-                                  prefixIcon: Icons.category_outlined,
-                                  textFieldBloc: expenseFormBloc.category,
+                                  textFieldBloc: loginFormBloc.password,
                                 ),
                                 SizedBox(
                                   height: 15.0,
                                 ),
-                                InputWidget(
-                                  topLabel: "Description",
-                                  hintText: "Enter description if needed",
-                                  textInputType: TextInputType.text,
-                                  prefixIcon: Icons.description_rounded,
-                                  textFieldBloc: expenseFormBloc.description,
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => ResetPasswordForm(),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Forgot Password?",
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      color: Constants.primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                                 SizedBox(
-                                  height: 15.0,
+                                  height: 20.0,
                                 ),
                                 AppButton(
                                   type: ButtonType.PRIMARY,
-                                  text: "Add expense!",
+                                  text: "Log In",
                                   onPressed: () {
-                                    expenseFormBloc.submit();
+                                    loginFormBloc.submit();
+                                    debugPrint("Log in Button pressed");
+                                    // context
+                                    //     .pushReplacement(AppRouterPaths.home);
                                   },
                                 )
                               ],
