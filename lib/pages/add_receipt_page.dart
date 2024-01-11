@@ -97,7 +97,7 @@ class AddReceiptPage extends StatelessWidget {
                                   topLabel: "Store Name",
                                   hintText: "Store Name",
                                   prefixIcon: Icons.apple,
-                                  textFieldBloc: receiptFormBloc.storeName,
+                                  fieldBloc: receiptFormBloc.storeName,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -107,7 +107,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the date of purchase",
                                   textInputType: TextInputType.datetime,
                                   prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: receiptFormBloc.purchaseDate,
+                                  fieldBloc: receiptFormBloc.purchaseDate,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -117,7 +117,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the expense category",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.category_outlined,
-                                  textFieldBloc: receiptFormBloc.category,
+                                  fieldBloc: receiptFormBloc.category,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -127,7 +127,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter description if needed",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.description_rounded,
-                                  textFieldBloc: receiptFormBloc.description,
+                                  fieldBloc: receiptFormBloc.description,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
