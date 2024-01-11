@@ -1,14 +1,14 @@
-import 'package:budget_master/utils/navigation/app_router_paths.dart';
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/order.dart';
-
 class ReceiptCard extends StatelessWidget {
-  final Order order;
+  final Receipt receipt;
 
-  ReceiptCard({required this.order});
+  ReceiptCard({required this.receipt});
 
   // For formatting date
   final DateFormat formatter = DateFormat("yyyy MM dd");
@@ -22,39 +22,34 @@ class ReceiptCard extends StatelessWidget {
       child: Container(
         height: 121,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Constants.cardBackgroundColor,
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(
-            color: Color.fromRGBO(220, 233, 245, 1),
+            color: Constants.cardBorderColor,
           ),
         ),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            getOrderIconWidget(order.status),
-            SizedBox(
-              width: 25.0,
-            ),
+            getOrderIconWidget(receipt.receiptInputMethod),
+            SizedBox(width: 25.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    getOrderStatusText(order.status),
+                    receipt.products[0].productName,
                     style: TextStyle(
-                      color: Color.fromRGBO(19, 22, 33, 1),
+                      color: Constants.mainTextColor,
                       fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  textRow("Placed On", formatter.format(order.placedDate)),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  textRow("Delivery On", formatter.format(order.arrivalDate))
+                  SizedBox(height: 10.0),
+                  textRow("Price of expenses:", receipt.products[0].price),
+                  SizedBox(height: 5.0),
+                  textRow("Purchased on:",
+                      formatter.format(DateTime.parse(receipt.purchaseDate))),
                 ],
               ),
             ),
@@ -63,83 +58,59 @@ class ReceiptCard extends StatelessWidget {
       ),
     );
   }
-}
 
-Widget textRow(String textOne, String textTwo) {
-  return Wrap(
-    children: [
-      Text(
-        "$textOne:",
-        style: TextStyle(
-          color: Color.fromRGBO(74, 77, 84, 0.7),
-          fontSize: 14.0,
+  Widget textRow(String textOne, String textTwo) {
+    return Wrap(
+      children: [
+        Text(
+          "$textOne:",
+          style: TextStyle(
+            color: Constants.secondaryTextColor,
+            fontSize: 14.0,
+          ),
         ),
-      ),
-      SizedBox(
-        width: 4.0,
-      ),
-      Text(
-        textTwo,
-        style: TextStyle(
-          color: Color.fromRGBO(19, 22, 33, 1),
-          fontSize: 14.0,
+        SizedBox(width: 4.0),
+        Text(
+          textTwo,
+          style: TextStyle(
+            color: Constants.mainTextColor,
+            fontSize: 14.0,
+          ),
         ),
-      ),
-    ],
-  );
-}
-
-Widget getOrderIconWidget(OrderStatus status) {
-  switch (status) {
-    case OrderStatus.PICKING_UP:
-      return Container(
-        width: 37,
-        height: 37,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color.fromRGBO(221, 40, 81, 0.18),
-        ),
-        child: Icon(
-          Icons.front_loader,
-          color: Color.fromRGBO(221, 40, 81, 1),
-        ),
-      );
-    case OrderStatus.DELIVERING:
-      return Container(
-        width: 37,
-        height: 37,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color.fromRGBO(255, 99, 2, 0.15),
-        ),
-        child: Icon(
-          Icons.history_edu_outlined,
-          color: Color.fromRGBO(255, 99, 2, 1),
-        ),
-      );
-    default:
-      return Container(
-        width: 37,
-        height: 37,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color.fromRGBO(221, 40, 81, 0.18),
-        ),
-        child: Icon(
-          Icons.front_loader,
-          color: Color.fromRGBO(221, 40, 81, 1),
-        ),
-      );
+      ],
+    );
   }
-}
 
-String getOrderStatusText(OrderStatus status) {
-  switch (status) {
-    case OrderStatus.DELIVERING:
-      return "Delivering Order";
-    case OrderStatus.PICKING_UP:
-      return "Picking Up Order";
-    default:
-      return "";
+  Widget getOrderIconWidget(ReceiptInputMethod receiptInputMethod) {
+    switch (receiptInputMethod) {
+      case ReceiptInputMethod.MANUAL:
+        return Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Constants.manualInputIconBackgroundColor,
+          ),
+          child: Icon(
+            Icons.border_color_rounded,
+            color: Constants.manualInputIconColor,
+          ),
+        );
+      case ReceiptInputMethod.OCR:
+        return Container(
+          width: 37,
+          height: 37,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Constants.ocrInputIconBackgroundColor,
+          ),
+          child: Icon(
+            Icons.receipt_long_rounded,
+            color: Constants.ocrInputIconColor,
+          ),
+        );
+      default:
+        return Container(); // Domyślnie zwróć pusty kontener, jeśli nie znaleziono metody.
+    }
   }
 }

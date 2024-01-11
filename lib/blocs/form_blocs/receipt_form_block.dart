@@ -1,23 +1,24 @@
+import 'package:budget_master/models/product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptFormBlock extends FormBloc<String, String> {
+  final String creatorID = FirebaseAuth.instance.currentUser!.uid;
+
   final storeName = TextFieldBloc(
     validators: [FieldBlocValidators.required],
   );
 
-  final purchaseDate = TextFieldBloc(
+  final purchaseDate = InputFieldBloc<DateTime, Object>(
     validators: [FieldBlocValidators.required],
+    initialValue: DateTime.now(),
   );
 
-  final category = TextFieldBloc(
-    validators: [FieldBlocValidators.required],
-  );
+  final category = TextFieldBloc();
 
-  final description = TextFieldBloc(
-    validators: [FieldBlocValidators.required],
-  );
+  final description = TextFieldBloc();
 
   final receipt = TextFieldBloc(
     validators: [FieldBlocValidators.required],
@@ -50,10 +51,14 @@ class ReceiptFormBlock extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     try {
-      await FirebaseFirestore.instance.collection('addedReceipts').add({
+      String formattedPurchaseDate =
+          DateFormat('yyyy-MM-dd').format(purchaseDate.value);
+
+      await FirebaseFirestore.instance.collection('receipts').add({
+        'creatorID': creatorID,
         'storeName': storeName.value,
-        'purchaseDate': purchaseDate.value,
-        'category': category.value,
+        'purchaseDate': formattedPurchaseDate,
+        'category': category.value == '' ? 'Not entered' : category.value,
         'description': description.value,
         'product': product.value.map<Product>((memberField) {
           debugPrint(memberField.productName.value);
@@ -84,29 +89,4 @@ class ProductFieldBloc extends GroupFieldBloc {
     required this.price,
     super.name,
   }) : super(fieldBlocs: [productName, price]);
-}
-
-class Product {
-  String? productName;
-  String? price;
-
-  Product({this.productName, this.price});
-
-  Product.fromJson(Map<String, dynamic> json) {
-    productName = json['productName'];
-    price = json['price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['productName'] = productName;
-    data['price'] = price;
-    return data;
-  }
-
-  @override
-  String toString() => '''Product {
-  productName: $productName,
-  price: $price
-}''';
 }
