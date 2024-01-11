@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_tesseract_ocr/android_ios.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 
 class ReceiptFormBlock extends FormBloc<String, String> {
   final storeName = TextFieldBloc(
@@ -36,6 +41,35 @@ class ReceiptFormBlock extends FormBloc<String, String> {
       ],
     );
   }
+
+  void loadFromGallery() async {
+    final XFile? gallery_image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (gallery_image != null) {
+      var text =
+          FlutterTesseractOcr.extractText(gallery_image.path, language: 'pol');
+      var res = LineSplitter().convert(await text);
+      List<String> n_res = [];
+      for (var item in res) {
+        if (item.isNotEmpty) {
+          n_res.add(item);
+        }
+      }
+      // Asuuming bounds
+      var top = extractOne(query: 'FISKALNY', choices: n_res, cutoff: 75)
+          .index; // Lower due to 'paragon niefiskalny'
+      var bot = extractOne(query: 'PLN', choices: n_res, cutoff: 80)
+          .index; // Should be at the end of the list
+      for (var i = top+1; i < bot; i++) {
+        product.addFieldBloc(ProductFieldBloc(
+            productName:
+                TextFieldBloc(name: 'productName', initialValue: n_res[i]),
+            price: TextFieldBloc(name: 'price', initialValue: 'test')));
+      }
+    }
+  }
+
+  void extractText(String text) {}
 
   void addProduct() {
     product.addFieldBloc(ProductFieldBloc(

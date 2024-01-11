@@ -199,12 +199,14 @@ class AddReceiptPage extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 8.0),
-                                    const Row(
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         ElevatedButton(
-                                          onPressed: null, //TODO addPhoto
+                                          onPressed: () {
+                                            receiptFormBloc.loadFromGallery();
+                                          },
                                           child: Text('From gallery'),
                                         ),
                                         ElevatedButton(
