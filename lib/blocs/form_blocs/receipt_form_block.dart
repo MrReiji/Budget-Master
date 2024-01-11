@@ -57,10 +57,41 @@ class ReceiptFormBlock extends FormBloc<String, String> {
       }
       // Asuuming bounds
       var top = extractOne(query: 'FISKALNY', choices: n_res, cutoff: 75)
-          .index; // Lower due to 'paragon niefiskalny'
+          .index; // Lower cutoff due to 'paragon niefiskalny'
       var bot = extractOne(query: 'PLN', choices: n_res, cutoff: 80)
           .index; // Should be at the end of the list
-      for (var i = top+1; i < bot; i++) {
+      for (var i = bot; i > top + 1; i--) {
+        if (n_res[i].contains("x") || n_res[i].contains("*")) {
+          bot = i;
+          print(n_res[i]);
+          break; // finds lowest multiplication sign, seems to be the only consistent delimiter
+        }
+      }
+      for (var i = top + 1; i <= bot; i++) {
+        //TODO:
+        // Go line by line, remember that line with "*"/"x" is the last in pairs/singles
+        // If line doesn't have "*"/"x", look ahead and see if the next line is mostly numbers
+        // Actually do it always
+        // In case of any inconsistencies, probably just throw an error rn until we manage to error-catch it properly
+        // Which (todo) isn't done yet
+        //if (i + 1 < n_res.length) {
+        //  if (next_line_is_mostly_numbers) {
+        //    if (next_line_has_mult) {
+        //      select_next_line_as_value;
+        //      select_this_line_as_name;
+        //    } else if (this_line_has_mult) {
+        //      go_to_the_mult_div_and_a_little_to_the_left___choose_that_as_pivot;
+        //      select_left_og_pivot_as_name;
+        //      select_right_ofpivot_and_next_line_as_value;
+        //    }
+        //  }
+        //} else if (this_line_has_mult) {
+        //  select_this_line_as_value;
+        //  go_to_the_mult_div_and_a_little_to_the_left___choose_that_as_pivot;
+        //  split_at_pivot;
+        //  things_on_left_of_pivot_are_name;
+        //  things_on_right_of_pivot_are_value_for_now;
+        //}
         product.addFieldBloc(ProductFieldBloc(
             productName:
                 TextFieldBloc(name: 'productName', initialValue: n_res[i]),
