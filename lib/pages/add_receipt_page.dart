@@ -15,13 +15,13 @@ class AddReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReceiptFormBlock(),
+      create: (context) => ReceiptFormBloc(),
       child: Builder(builder: (context) {
-        final receiptFormBloc = context.read<ReceiptFormBlock>();
+        final receiptFormBloc = context.read<ReceiptFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
-          body: FormBlocListener<ReceiptFormBlock, String, String>(
+          body: FormBlocListener<ReceiptFormBloc, String, String>(
             onSubmitting: (context, state) {
               LoadingDialog.show(context);
             },
@@ -96,7 +96,8 @@ class AddReceiptPage extends StatelessWidget {
                                 InputWidget(
                                   topLabel: "Store Name",
                                   hintText: "Store Name",
-                                  prefixIcon: Icons.apple,
+                                  prefixIcon:
+                                      Icons.store_mall_directory_outlined,
                                   fieldBloc: receiptFormBloc.storeName,
                                 ),
                                 const SizedBox(
@@ -136,7 +137,7 @@ class AddReceiptPage extends StatelessWidget {
                                     ListFieldBloc<ProductFieldBloc, dynamic>,
                                     ListFieldBlocState<ProductFieldBloc,
                                         dynamic>>(
-                                  bloc: receiptFormBloc.product,
+                                  bloc: receiptFormBloc.products,
                                   builder: (context, state) {
                                     if (state.fieldBlocs.isNotEmpty) {
                                       return ListView.builder(
@@ -297,22 +298,22 @@ class ProductCard extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.productName,
-                      decoration: const InputDecoration(
-                        labelText: 'Product Name',
-                      ),
+                    child: InputWidget(
+                      topLabel: "Product name",
+                      hintText: "Enter product name",
+                      prefixIcon: Icons.apple,
+                      fieldBloc: productField.productName,
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.price,
-                      decoration: const InputDecoration(
-                        labelText: 'Price',
-                      ),
+                    child: InputWidget(
+                      topLabel: "Product price",
+                      hintText: "Enter product price in pln",
+                      prefixIcon: Icons.attach_money_rounded,
+                      fieldBloc: productField.price,
                     ),
                   ),
                 ),
