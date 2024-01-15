@@ -34,7 +34,7 @@ class InputWidget extends StatelessWidget {
           constraints: BoxConstraints(minHeight: height),
           child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.transparent,
               ),
               child: buildFieldBlocBuilder()),
         ),
