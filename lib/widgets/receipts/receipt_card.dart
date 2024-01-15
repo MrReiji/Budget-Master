@@ -10,17 +10,35 @@ class ReceiptCard extends StatelessWidget {
 
   ReceiptCard({required this.receipt});
 
-  // For formatting date
-  final DateFormat formatter = DateFormat("yyyy MM dd");
-
   @override
   Widget build(BuildContext context) {
+    String productNames;
+    if (receipt.products.length > 5) {
+      productNames = receipt.products
+              .take(5)
+              .map((product) => product.productName.trim())
+              .join(', ') +
+          ', ...';
+    } else {
+      productNames = receipt.products
+          .map((product) => product.productName.trim())
+          .join(', ');
+    }
+
+    final totalPrice = receipt.products
+        .fold<double>(
+          0.0,
+          (sum, product) =>
+              sum + double.parse(product.price.replaceAll(',', '.')),
+        )
+        .toStringAsFixed(2);
+
     return GestureDetector(
       onTap: () {
         context.push(AppRouterPaths.receipt);
       },
       child: Container(
-        height: 121,
+        //height: 121,
         decoration: BoxDecoration(
           color: Constants.cardBackgroundColor,
           borderRadius: BorderRadius.circular(8.0),
@@ -39,17 +57,16 @@ class ReceiptCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    receipt.products[0].productName,
+                    productNames,
                     style: TextStyle(
                       color: Constants.mainTextColor,
                       fontSize: 16.0,
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  textRow("Price of expenses:", receipt.products[0].price),
+                  textRow("Price of expenses:", totalPrice),
                   SizedBox(height: 5.0),
-                  textRow("Purchased on:",
-                      formatter.format(DateTime.parse(receipt.purchaseDate))),
+                  textRow("Purchased on:", receipt.purchaseDate),
                 ],
               ),
             ),
@@ -110,7 +127,7 @@ class ReceiptCard extends StatelessWidget {
           ),
         );
       default:
-        return Container(); // Domyślnie zwróć pusty kontener, jeśli nie znaleziono metody.
+        return Container(); // By default, return an empty container if the method is not found.
     }
   }
 }
