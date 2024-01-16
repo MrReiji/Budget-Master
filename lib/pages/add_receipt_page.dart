@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
+import '../constants/constants.dart';
 import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../widgets/ui_elements/app_button.dart';
+import '../widgets/forms/input_widget.dart';
+import '../widgets/dialogs/loading_dialog.dart';
 
 class AddReceiptPage extends StatelessWidget {
   const AddReceiptPage({super.key});
@@ -15,13 +15,13 @@ class AddReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReceiptFormBlock(),
+      create: (context) => ReceiptFormBloc(),
       child: Builder(builder: (context) {
-        final receiptFormBloc = context.read<ReceiptFormBlock>();
+        final receiptFormBloc = context.read<ReceiptFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
-          body: FormBlocListener<ReceiptFormBlock, String, String>(
+          body: FormBlocListener<ReceiptFormBloc, String, String>(
             onSubmitting: (context, state) {
               LoadingDialog.show(context);
             },
@@ -65,9 +65,9 @@ class AddReceiptPage extends StatelessWidget {
                                     .textTheme
                                     .titleLarge
                                     ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                               )
                             ],
                           ),
@@ -80,7 +80,7 @@ class AddReceiptPage extends StatelessWidget {
                             width: double.infinity,
                             constraints: BoxConstraints(
                               minHeight:
-                              MediaQuery.of(context).size.height - 180.0,
+                                  MediaQuery.of(context).size.height - 180.0,
                             ),
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
@@ -96,8 +96,9 @@ class AddReceiptPage extends StatelessWidget {
                                 InputWidget(
                                   topLabel: "Store Name",
                                   hintText: "Store Name",
-                                  prefixIcon: Icons.apple,
-                                  textFieldBloc: receiptFormBloc.storeName,
+                                  prefixIcon:
+                                      Icons.store_mall_directory_outlined,
+                                  fieldBloc: receiptFormBloc.storeName,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -107,7 +108,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the date of purchase",
                                   textInputType: TextInputType.datetime,
                                   prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: receiptFormBloc.purchaseDate,
+                                  fieldBloc: receiptFormBloc.purchaseDate,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -117,7 +118,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the expense category",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.category_outlined,
-                                  textFieldBloc: receiptFormBloc.category,
+                                  fieldBloc: receiptFormBloc.category,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -127,26 +128,30 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter description if needed",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.description_rounded,
-                                  textFieldBloc: receiptFormBloc.description,
+                                  fieldBloc: receiptFormBloc.description,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
                                 ),
-                                BlocBuilder<ListFieldBloc<ProductFieldBloc, dynamic>,
-                                    ListFieldBlocState<ProductFieldBloc, dynamic>>(
-                                  bloc: receiptFormBloc.product,
+                                BlocBuilder<
+                                    ListFieldBloc<ProductFieldBloc, dynamic>,
+                                    ListFieldBlocState<ProductFieldBloc,
+                                        dynamic>>(
+                                  bloc: receiptFormBloc.products,
                                   builder: (context, state) {
                                     if (state.fieldBlocs.isNotEmpty) {
                                       return ListView.builder(
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         itemCount: state.fieldBlocs.length,
                                         itemBuilder: (context, i) {
                                           return ProductCard(
                                             productIndex: i,
                                             productField: state.fieldBlocs[i],
                                             onRemoveProduct: () =>
-                                                receiptFormBloc.removeProduct(i),
+                                                receiptFormBloc
+                                                    .removeProduct(i),
                                           );
                                         },
                                       );
@@ -163,19 +168,30 @@ class AddReceiptPage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8.0),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
                                           width: 100.0,
                                           color: Colors.black,
                                         ),
-                                        const SizedBox(width: 8.0),
-                                        const Text(
-                                          'and/or',
-                                          style: TextStyle(fontSize: 16),
+                                        const SizedBox(width: 4.0),
+                                        const Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'and/or',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            Text(
+                                              'Add receipt photo',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 8.0),
+                                        const SizedBox(width: 4.0),
                                         Container(
                                           height: 1.0,
                                           width: 100.0,
@@ -184,13 +200,24 @@ class AddReceiptPage extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 8.0),
-                                    const ElevatedButton(
-                                      onPressed: null, //TODO addPhoto
-                                      child: Text('Add receipt photo'),
+                                    const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: null, //TODO addPhoto
+                                          child: Text('From gallery'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: null, //TODO addPhoto
+                                          child: Text('Using camera'),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 16.0),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
@@ -271,22 +298,22 @@ class ProductCard extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.productName,
-                      decoration: const InputDecoration(
-                        labelText: 'Product Name',
-                      ),
+                    child: InputWidget(
+                      topLabel: "Product name",
+                      hintText: "Enter product name",
+                      prefixIcon: Icons.apple,
+                      fieldBloc: productField.productName,
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.price,
-                      decoration: const InputDecoration(
-                        labelText: 'Price',
-                      ),
+                    child: InputWidget(
+                      topLabel: "Product price",
+                      hintText: "Enter product price in pln",
+                      prefixIcon: Icons.attach_money_rounded,
+                      fieldBloc: productField.price,
                     ),
                   ),
                 ),

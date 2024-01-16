@@ -1,13 +1,13 @@
-import 'package:budget_master/blocs/form_blocs/signup_form_bloc.dart';
+import 'package:budget_master/blocs/form_blocs/auth/signup_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
-import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../../constants/constants.dart';
+import '../../utils/navigation/app_router_paths.dart';
+import '../../widgets/ui_elements/app_button.dart';
+import '../../widgets/forms/input_widget.dart';
+import '../../widgets/dialogs/loading_dialog.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -30,8 +30,8 @@ class SignUpScreen extends StatelessWidget {
             },
             onSuccess: (context, state) {
               LoadingDialog.hide(context);
-
-              context.push(AppRouterPaths.home);
+              // Navigation to home is handled by RouterNotifier's redirect.
+              // context.push(AppRouterPaths.home);
             },
             onFailure: (context, state) {
               LoadingDialog.hide(context);
@@ -109,7 +109,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.newUsername,
                                   ],
-                                  textFieldBloc: signUpFormBloc.username,
+                                  fieldBloc: signUpFormBloc.username,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -122,7 +122,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
-                                  textFieldBloc: signUpFormBloc.email,
+                                  fieldBloc: signUpFormBloc.email,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -136,7 +136,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: signUpFormBloc.password,
+                                  fieldBloc: signUpFormBloc.password,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -150,7 +150,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: signUpFormBloc.confirmPassword,
+                                  fieldBloc: signUpFormBloc.confirmPassword,
                                 ),
                                 SizedBox(
                                   height: 15.0,

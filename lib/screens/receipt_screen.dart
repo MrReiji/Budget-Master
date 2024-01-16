@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/constants.dart';
+import '../constants/constants.dart';
 
 class ReceiptScreen extends StatefulWidget {
   const ReceiptScreen({super.key});

@@ -1,15 +1,15 @@
-import 'package:budget_master/blocs/form_blocs/login_form_bloc.dart';
+import 'package:budget_master/blocs/form_blocs/auth/login_form_bloc.dart';
 import 'package:budget_master/utils/firebase/resetPassword.dart';
-import 'package:budget_master/widgets/reset_password_form.dart';
+import 'package:budget_master/widgets/forms/reset_password_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/constants.dart';
-import '../utils/navigation/app_router_paths.dart';
-import '../widgets/app_button.dart';
-import '../widgets/input_widget.dart';
-import '../widgets/loading_dialog.dart';
+import '../../constants/constants.dart';
+import '../../utils/navigation/app_router_paths.dart';
+import '../../widgets/ui_elements/app_button.dart';
+import '../../widgets/forms/input_widget.dart';
+import '../../widgets/dialogs/loading_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -113,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
-                                  textFieldBloc: loginFormBloc.email,
+                                  fieldBloc: loginFormBloc.email,
                                 ),
                                 SizedBox(
                                   height: 25.0,
@@ -127,7 +127,7 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: loginFormBloc.password,
+                                  fieldBloc: loginFormBloc.password,
                                 ),
                                 SizedBox(
                                   height: 15.0,

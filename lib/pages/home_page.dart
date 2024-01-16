@@ -1,6 +1,6 @@
-import 'package:budget_master/utils/constants.dart';
+import 'package:budget_master/constants/constants.dart';
 import 'package:budget_master/utils/firebase/getCurrentUsername.dart';
-import 'package:budget_master/widgets/latest_receipts.dart';
+import 'package:budget_master/widgets/receipts/latest_receipts.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

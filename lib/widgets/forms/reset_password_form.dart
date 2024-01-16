@@ -1,10 +1,9 @@
-import 'package:budget_master/blocs/form_blocs/reset_password_form_bloc.dart';
-import 'package:budget_master/widgets/app_button.dart';
-import 'package:budget_master/widgets/input_widget.dart';
-import 'package:budget_master/widgets/loading_dialog.dart';
+import 'package:budget_master/blocs/form_blocs/auth/reset_password_form_bloc.dart';
+import 'package:budget_master/widgets/ui_elements/app_button.dart';
+import 'package:budget_master/widgets/forms/input_widget.dart';
+import 'package:budget_master/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:budget_master/utils/constants.dart';
 import 'package:go_router/go_router.dart';
 
 class ResetPasswordForm extends StatelessWidget {
@@ -64,7 +63,7 @@ class ResetPasswordForm extends StatelessWidget {
                           hintText: "Enter your recovery email",
                           prefixIcon: Icons.email,
                           textInputType: TextInputType.emailAddress,
-                          textFieldBloc: resetPasswordformBloc.recoveryEmail,
+                          fieldBloc: resetPasswordformBloc.recoveryEmail,
                         ),
                         SizedBox(height: 20),
                         AppButton(
