@@ -75,6 +75,14 @@ class ReceiptFormBloc extends FormBloc<String, String> {
       String formattedPurchaseDate =
           DateFormat('yyyy-MM-dd').format(purchaseDate.value);
 
+      final totalPrice = products.value
+          .fold<double>(
+            0.0,
+            (sum, product) =>
+                sum + double.parse(product.price.value.replaceAll(',', '.')),
+          )
+          .toStringAsFixed(2);
+
       await FirebaseFirestore.instance.collection('receipts').add({
         'creatorID': creatorID,
         'storeName': storeName.value,
@@ -84,11 +92,12 @@ class ReceiptFormBloc extends FormBloc<String, String> {
         'products': products.value.map<Product>((productField) {
           return Product(
             productName: productField.productName.value,
-            price: productField.price.value,
+            price: productField.price.value.replaceAll(',', '.'),
           );
         }).map<Map<String, dynamic>>((product) {
           return product.toJson();
         }).toList(),
+        'totalPrice': totalPrice,
       });
       emitSuccess(successResponse: 'Expense added successfully');
     } catch (e) {

@@ -9,13 +9,14 @@ class Receipt {
   final String description;
   final ReceiptInputMethod receiptInputMethod;
   final List<Product> products;
+  final String totalPrice;
 
-  Receipt({
-    required this.storeName,
-    required this.purchaseDate,
-    required this.category,
-    required this.description,
-    required this.receiptInputMethod,
-    required this.products,
-  });
+  Receipt(
+      {required this.storeName,
+      required this.purchaseDate,
+      required this.category,
+      required this.description,
+      required this.receiptInputMethod,
+      required this.products,
+      required this.totalPrice});
 }

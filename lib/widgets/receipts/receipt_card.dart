@@ -25,14 +25,6 @@ class ReceiptCard extends StatelessWidget {
           .join(', ');
     }
 
-    final totalPrice = receipt.products
-        .fold<double>(
-          0.0,
-          (sum, product) =>
-              sum + double.parse(product.price.replaceAll(',', '.')),
-        )
-        .toStringAsFixed(2);
-
     return GestureDetector(
       onTap: () {
         context.push(AppRouterPaths.receipt);
@@ -64,7 +56,7 @@ class ReceiptCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  textRow("Price of expenses:", totalPrice),
+                  textRow("Price of expenses:", receipt.totalPrice),
                   SizedBox(height: 5.0),
                   textRow("Purchased on:", receipt.purchaseDate),
                 ],
