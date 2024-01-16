@@ -8,20 +8,16 @@ class NavBarItems {
         activeIndex == 0,
       ),
       _createNavItem(
-        Icons.insert_chart_outlined_rounded,
+        Icons.add,
         activeIndex == 1,
       ),
       _createNavItem(
-        Icons.add,
+        Icons.insert_chart_outlined_rounded,
         activeIndex == 2,
       ),
       _createNavItem(
-        Icons.favorite,
-        activeIndex == 3,
-      ),
-      _createNavItem(
         Icons.settings,
-        activeIndex == 4,
+        activeIndex == 3,
       ),
     ];
   }
