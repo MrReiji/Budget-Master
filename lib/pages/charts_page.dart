@@ -94,10 +94,10 @@ class _ChartsPageState extends State<ChartsPage> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 100.0,
+                        height: 50.0,
                       ),
                       Container(
-                        height: 600.0,
+                        height: 300,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child:

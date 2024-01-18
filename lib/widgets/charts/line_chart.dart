@@ -15,6 +15,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     Colors.blue.shade300,
     Colors.blue.shade800,
   ];
+  List<Color> gradientColors2 = [
+    Colors.white,
+    Colors.blue.shade800,
+  ];
   // final Duration animDuration = const Duration(milliseconds: 250);
   bool showAvg = false;
 
@@ -74,18 +78,18 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return LineChartData(
       gridData: FlGridData(
         show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
+        drawVerticalLine: false,
+        horizontalInterval: 2,
+        verticalInterval: 3,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
-            color: Colors.lightBlue,
+            color: Color.fromARGB(255, 179, 231, 255),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return const FlLine(
-            color: Colors.lightBlue,
+            color: Color.fromARGB(255, 179, 231, 255),
             strokeWidth: 1,
           );
         },
@@ -108,7 +112,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: true,
+            showTitles: false,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 42,
@@ -116,9 +120,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
       ),
       borderData: FlBorderData(
-        show: true,
+        show: false,
         border: Border.all(
-          color: Colors.lightBlue,
+          color: Color.fromARGB(255, 179, 231, 255),
         ),
       ),
       minX: 0,
@@ -145,7 +149,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           gradient: LinearGradient(
             colors: gradientColors,
           ),
-          barWidth: 5,
+          barWidth: 3,
           isStrokeCapRound: true,
           dotData: const FlDotData(
             show: false,
@@ -153,9 +157,12 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
+              colors: gradientColors2
+                  .map((color) => color.withOpacity(0.5))
                   .toList(),
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              // transform: GradientRotation(1.5 * pi),
             ),
           ),
         ),
@@ -196,7 +203,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: true,
+            showTitles: false,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 42,
             interval: 1,
@@ -255,13 +262,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 1.70,
+          aspectRatio: 1.20,
           child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
+            padding: EdgeInsets.symmetric(
+              horizontal: 1.0,
+              vertical: 1.0,
             ),
             child: LineChart(
               showAvg ? avgData() : mainLineData(),
