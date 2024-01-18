@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:budget_master/constants/constants.dart';
 
 // ignore: must_be_immutable
 class BarChartWidget extends StatefulWidget {
@@ -18,7 +17,12 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex = -1;
   Color touchedBarColor = Colors.blue.shade800;
-  Color barBackgroundColor = Constants.primaryColor;
+  Color barBackgroundColor = Colors.grey.shade100;
+
+  List<Color> gradientColors = [
+    Colors.blue.shade200,
+    Colors.blue.shade600,
+  ];
 
   BarChartGroupData makeGroupData(
     int x,
@@ -35,6 +39,11 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         BarChartRodData(
           toY: isTouched ? y + 1 : y,
           color: isTouched ? touchedBarColor : barColor,
+          gradient: LinearGradient(
+            colors: gradientColors,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
           width: width,
           borderSide: isTouched
               ? BorderSide(color: touchedBarColor)
