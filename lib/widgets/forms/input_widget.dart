@@ -6,7 +6,7 @@ class InputWidget extends StatelessWidget {
   final String? hintText;
   final IconData? prefixIcon;
   final double height;
-  final String topLabel;
+  final String? topLabel;
   final bool obscureText;
   final Iterable<String>? autofillHints;
   final FieldBloc<dynamic> fieldBloc;
@@ -16,7 +16,7 @@ class InputWidget extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.height = 70.0,
-    this.topLabel = "",
+    this.topLabel,
     this.obscureText = false,
     this.autofillHints,
     required this.fieldBloc,
@@ -28,8 +28,12 @@ class InputWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(this.topLabel),
-        SizedBox(height: 5.0),
+        //Useful in ProcutCard
+        if (topLabel != null) ...[
+          Text(topLabel!),
+          SizedBox(height: 5.0),
+        ],
+
         ConstrainedBox(
           constraints: BoxConstraints(minHeight: height),
           child: Container(
@@ -66,10 +70,12 @@ class InputWidget extends StatelessWidget {
 
   InputDecoration getInputDecoration() {
     return InputDecoration(
-      prefixIcon: Icon(
-        this.prefixIcon,
-        color: Color.fromRGBO(105, 108, 121, 1),
-      ),
+      prefixIcon: prefixIcon != null
+          ? Icon(
+              this.prefixIcon,
+              color: Color.fromRGBO(105, 108, 121, 1),
+            )
+          : null,
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: Color.fromRGBO(74, 77, 84, 0.2),
