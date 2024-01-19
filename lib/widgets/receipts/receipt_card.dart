@@ -3,8 +3,8 @@ import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
-import 'package:intl/intl.dart';
 
+//Widget relating to LatestReceipts and HomePageScreen
 class ReceiptCard extends StatelessWidget {
   final Receipt receipt;
 
