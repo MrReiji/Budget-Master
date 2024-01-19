@@ -17,7 +17,7 @@ class _ChartsPageState extends State<ChartsPage> {
   bool isPlaying = false;
   Color touchedBarColor = Colors.blue.shade800;
   Color barBackgroundColor = Constants.primaryColor;
-  ChartType selectedChartType = ChartType.bar;
+  // ChartType selectedChartType = ChartType.bar;
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +50,27 @@ class _ChartsPageState extends State<ChartsPage> {
                           ),
                     ),
                     // Dodaj przyciski do wyboru rodzaju wykresu
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedChartType = ChartType.bar;
-                            });
-                          },
-                          child: Text('Bar Chart'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedChartType = ChartType.line;
-                            });
-                          },
-                          child: Text('Line Chart'),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           selectedChartType = ChartType.bar;
+                    //         });
+                    //       },
+                    //       child: Text('Bar Chart'),
+                    //     ),
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           selectedChartType = ChartType.line;
+                    //         });
+                    //       },
+                    //       child: Text('Line Chart'),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -97,11 +97,52 @@ class _ChartsPageState extends State<ChartsPage> {
                         height: 50.0,
                       ),
                       Container(
-                        height: 300,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child:
-                              buildChart(), // Wywołaj funkcję do renderowania wykresu
+                        // height: 300,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                  ),
+                                  child: Text(
+                                    "Yearly Spendings",
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 25.0,
+                            ),
+                            buildChart(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 100.0,
+                      ),
+                      Container(
+                        // height: 320,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Text(
+                                    "Weekly Spendings",
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 25.0,
+                            ),
+                            Container(height: 300, child: buildChart2()),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -120,14 +161,19 @@ class _ChartsPageState extends State<ChartsPage> {
 
   // Funkcja do renderowania odpowiedniego wykresu w zależności od wybranej opcji
   Widget buildChart() {
-    switch (selectedChartType) {
-      case ChartType.bar:
-        return BarChartWidget(
-          isPlaying: isPlaying,
-        );
-      case ChartType.line:
-        return LineChartWidget();
-    }
+    return LineChartWidget();
+    // switch (selectedChartType) {
+    //   case ChartType.bar:
+    //     return BarChartWidget(
+    //       isPlaying: isPlaying,
+    //     );
+    //   case ChartType.line:
+    //     return LineChartWidget();
+    // }
+  }
+
+  Widget buildChart2() {
+    return BarChartWidget(isPlaying: isPlaying);
   }
 
   Future<dynamic> refreshState() async {
@@ -142,7 +188,7 @@ class _ChartsPageState extends State<ChartsPage> {
 }
 
 // Dodane wyliczenie do przechowywania rodzaju wykresu
-enum ChartType {
-  bar,
-  line,
-}
+// enum ChartType {
+//   bar,
+//   line,
+// }
