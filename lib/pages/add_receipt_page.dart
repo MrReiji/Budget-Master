@@ -1,4 +1,5 @@
 import 'package:budget_master/blocs/form_blocs/receipt_form_block.dart';
+import 'package:budget_master/widgets/receipts/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,6 @@ import '../constants/constants.dart';
 import '../utils/navigation/app_router_paths.dart';
 import '../widgets/ui_elements/app_button.dart';
 import '../widgets/forms/input_widget.dart';
-import '../widgets/forms/receipt_input_widget.dart';
 import '../widgets/dialogs/loading_dialog.dart';
 
 class AddReceiptPage extends StatelessWidget {
@@ -146,7 +146,8 @@ class AddReceiptPage extends StatelessWidget {
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Receipt Details",
@@ -154,10 +155,11 @@ class AddReceiptPage extends StatelessWidget {
                                             .textTheme
                                             .titleLarge
                                             ?.copyWith(
-                                          color: Color.fromRGBO(74, 77, 84, 1),
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w800,
-                                        ),
+                                              color:
+                                                  Color.fromRGBO(74, 77, 84, 1),
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w800,
+                                            ),
                                       ),
                                       SizedBox(
                                         height: 6.0,
@@ -166,11 +168,13 @@ class AddReceiptPage extends StatelessWidget {
                                         "PRODUCT NAME AND ITS PRICE",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          color: Color.fromRGBO(143, 148, 162, 1),
+                                          color:
+                                              Color.fromRGBO(143, 148, 162, 1),
                                         ),
                                       ),
                                       BlocBuilder<
-                                          ListFieldBloc<ProductFieldBloc, dynamic>,
+                                          ListFieldBloc<ProductFieldBloc,
+                                              dynamic>,
                                           ListFieldBlocState<ProductFieldBloc,
                                               dynamic>>(
                                         bloc: receiptFormBloc.products,
@@ -179,12 +183,14 @@ class AddReceiptPage extends StatelessWidget {
                                             return ListView.builder(
                                               shrinkWrap: true,
                                               physics:
-                                              const NeverScrollableScrollPhysics(),
-                                              itemCount: state.fieldBlocs.length,
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount:
+                                                  state.fieldBlocs.length,
                                               itemBuilder: (context, i) {
                                                 return ProductCard(
                                                   productIndex: i,
-                                                  productField: state.fieldBlocs[i],
+                                                  productField:
+                                                      state.fieldBlocs[i],
                                                   onRemoveProduct: () =>
                                                       receiptFormBloc
                                                           .removeProduct(i),
@@ -199,10 +205,12 @@ class AddReceiptPage extends StatelessWidget {
                                         height: 20.0,
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           ElevatedButton(
-                                            onPressed: receiptFormBloc.addProduct,
+                                            onPressed:
+                                                receiptFormBloc.addProduct,
                                             child: const Text('Add product'),
                                           ),
                                         ],
@@ -298,65 +306,6 @@ class AddReceiptPage extends StatelessWidget {
           ),
         );
       }),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final int productIndex;
-  final ProductFieldBloc productField;
-
-  final VoidCallback onRemoveProduct;
-
-  const ProductCard({
-    super.key,
-    required this.productIndex,
-    required this.productField,
-    required this.onRemoveProduct,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 80.0,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: ReceiptInputWidget(
-                  height: 30,
-                  hintText: "Name",
-                  fieldBloc: productField.productName,
-                ),
-              ),
-              SizedBox(width: 5.0),
-              SizedBox(
-                width: 80.0,
-                child:ReceiptInputWidget(
-                  height: 30,
-                  hintText: "      \$",
-                  textInputType: TextInputType.number,
-                  fieldBloc: productField.price,
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: onRemoveProduct,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
