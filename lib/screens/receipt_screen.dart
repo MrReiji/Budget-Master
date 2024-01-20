@@ -92,14 +92,15 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                 ),
                           ),
                           SizedBox(
-                            height: 6.0,
+                            height: 10.0,
                           ),
                           getDataRow("STORE NAME:", "XYZ"),
                           getDataRow("DATE:", "20-01-2024"),
                           getDataRow("CATEGORY:", "Clothes"),
-                          getDescriptionColumn("datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata"),
+                          getDescriptionColumn(
+                              "Description that you provide will be shown here. You can add any description here. This is just a dummy text."),
                           SizedBox(
-                            height: 30.0,
+                            height: 10.0,
                           ),
                           Text(
                             "PRODUCTS, THEIR AMOUNT AND PRICE:",
@@ -266,19 +267,18 @@ Widget getDescriptionColumn(String data) {
         ),
         Container(
             child: Row(
-              children: <Widget>[
-                Flexible(
-                    child: Text(
-                      data,
-                      style: TextStyle(
-                        color: Color.fromRGBO(74, 77, 84, 1),
-                        fontSize: 15.0,
-                      ),
-                    ),
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                data,
+                style: TextStyle(
+                  color: Color.fromRGBO(74, 77, 84, 1),
+                  fontSize: 15.0,
                 ),
-              ],
-            )
-        ),
+              ),
+            ),
+          ],
+        )),
       ],
     ),
   );
