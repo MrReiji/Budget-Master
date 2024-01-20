@@ -97,7 +97,7 @@ class ReceiptFormBloc extends FormBloc<String, String> {
         //  things_on_left_of_pivot_are_name;
         //  things_on_right_of_pivot_are_value_for_now;
         //}
-        product.addFieldBloc(ProductFieldBloc(
+        products.addFieldBloc(ProductFieldBloc(
             productName:
                 TextFieldBloc(name: 'productName', initialValue: n_res[i]),
             price: TextFieldBloc(name: 'price', initialValue: 'test')));
