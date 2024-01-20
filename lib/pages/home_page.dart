@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: EdgeInsets.symmetric(horizontal: 18.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -187,17 +187,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Przenieś się na stronę receipt_page.dart
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ReceiptScreen()),
-                    );
-                  },
-                  child: Text('[TEST] Receipt Page'),
-                ),
-                SizedBox(height: 50.0),
                 LatestReceipts(
                   filterOption: filterOption,
                   sortDirection: sortDirection,
