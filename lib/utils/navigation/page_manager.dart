@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 class PageManager {
   static final List<Widget> _pages = [
     const HomePage(), // For index 0
-    const HomePage(), // For index 1
+    const AddReceiptPage(), // For index 1
     const AddReceiptPage(), // For index 2
-    const HomePage(), // For index 3
-    const SettingsPage(), // For index 4
+    const SettingsPage(), // For index 3
   ];
 
   // Static method to get pages

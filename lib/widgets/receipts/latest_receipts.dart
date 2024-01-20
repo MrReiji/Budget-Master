@@ -1,136 +1,107 @@
-import 'package:budget_master/models/product.dart';
+import 'package:budget_master/models/filter_options.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-
-import '../../models/receipt.dart';
-import '../../constants/constants.dart';
+import 'package:budget_master/models/receipt.dart';
+import 'package:budget_master/models/product.dart';
 import 'receipt_card.dart';
+import 'package:budget_master/pages/home_page.dart';
 
 class LatestReceipts extends StatelessWidget {
+  final FilterOption filterOption;
+  final SortDirection sortDirection;
+
+  LatestReceipts({
+    required this.filterOption,
+    required this.sortDirection,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('receipts')
-            .where('creatorID',
-                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
-        builder: (context, snapshot) {
-          return Container(
+    Query receiptsQuery = FirebaseFirestore.instance
+        .collection('receipts')
+        .where('creatorID', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+
+    String orderByField = filterOption == FilterOption.purchaseDate
+        ? 'purchaseDate'
+        : 'totalPrice';
+    bool isDescending = sortDirection == SortDirection.descending;
+
+    receiptsQuery =
+        receiptsQuery.orderBy(orderByField, descending: isDescending);
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream:
+          receiptsQuery.snapshots().cast<QuerySnapshot<Map<String, dynamic>>>(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 20.0,
+                Image.asset(
+                  'assets/empty_list_image.png',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Latest Receipts",
-                        style: TextStyle(
-                          color: Color.fromRGBO(19, 22, 33, 1),
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      Text(
-                        "Filter by",
-                        style: TextStyle(
-                          color: Constants.primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    ],
-                  ),
+                Text(
+                  "Empty list? Add your first expenses!",
+                  style: TextStyle(fontSize: 20),
                 ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                receiptsBasedOnSnapshot(snapshot),
               ],
             ),
           );
-        });
-  }
-}
+        }
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+          return ListView.separated(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 10.0,
+            ),
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var receiptData = snapshot.data!.docs[index].data();
+              var products =
+                  List.from(receiptData['products']).map<Product>((item) {
+                return Product(
+                    productName: item['productName'], price: item['price']);
+              }).toList();
 
-Widget receiptsBasedOnSnapshot(
-    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-  if (snapshot.connectionState == ConnectionState.waiting) {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/empty_list_image.png',
-            width: 300,
-            height: 300,
-            fit: BoxFit.cover,
-          ),
-          Text(
-            "Empty list? Add your first expenses!",
+              Receipt receipt = Receipt(
+                receiptInputMethod:
+                    ReceiptInputMethod.MANUAL, // Or other method
+                products: products,
+                storeName: receiptData['storeName'],
+                purchaseDate: receiptData['purchaseDate'],
+                category: receiptData['category'],
+                description: receiptData['description'],
+                totalPrice: receiptData['totalPrice'],
+              );
+
+              return ReceiptCard(receipt: receipt);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 2.0,
+              );
+            },
+          );
+        }
+        return Center(
+          child: Text(
+            'Something went wrong...',
             style: TextStyle(fontSize: 20),
           ),
-        ],
-      ),
-    );
-  }
-  if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-    final loadedReceiptsDocs = snapshot.data!.docs;
-
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 10.0,
-      ),
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        final receipt = loadedReceiptsDocs[index].data();
-
-        final List<Product> products = List.from(receipt['products'])
-            .map((item) => Product(
-                  productName: item['productName'],
-                  price: item['price'],
-                ))
-            .toList();
-
-        return ReceiptCard(
-          receipt: Receipt(
-            receiptInputMethod: ReceiptInputMethod.MANUAL,
-            products: products,
-            storeName: receipt['storeName'],
-            purchaseDate: receipt['purchaseDate'],
-            category: receipt['category'],
-            description: receipt['description'],
-          ),
         );
       },
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 15.0,
-        );
-      },
-      itemCount: loadedReceiptsDocs.length,
     );
   }
-  debugPrint(snapshot.connectionState.toString());
-  debugPrint(snapshot.hasData.toString());
-  debugPrint(snapshot.data!.docs.isEmpty.toString());
-  return Center(
-    child: Text(
-      'Something went wrong...',
-      style: TextStyle(fontSize: 20),
-    ),
-  );
 }

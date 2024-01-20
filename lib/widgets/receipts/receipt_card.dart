@@ -3,8 +3,8 @@ import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
-import 'package:intl/intl.dart';
 
+//Widget relating to LatestReceipts and HomePageScreen
 class ReceiptCard extends StatelessWidget {
   final Receipt receipt;
 
@@ -24,14 +24,6 @@ class ReceiptCard extends StatelessWidget {
           .map((product) => product.productName.trim())
           .join(', ');
     }
-
-    final totalPrice = receipt.products
-        .fold<double>(
-          0.0,
-          (sum, product) =>
-              sum + double.parse(product.price.replaceAll(',', '.')),
-        )
-        .toStringAsFixed(2);
 
     return GestureDetector(
       onTap: () {
@@ -64,7 +56,7 @@ class ReceiptCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  textRow("Price of expenses:", totalPrice),
+                  textRow("Price of expenses:", receipt.totalPrice),
                   SizedBox(height: 5.0),
                   textRow("Purchased on:", receipt.purchaseDate),
                 ],
