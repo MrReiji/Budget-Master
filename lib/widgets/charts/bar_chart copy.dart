@@ -4,10 +4,11 @@ import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class BarChartWidget extends StatefulWidget {
-  bool isPlaying = false;
-  BarChartWidget({Key? key, required this.isPlaying}) : super(key: key);
+  final List<Map<String, dynamic>> chartData;
+  final bool isPlaying;
+  BarChartWidget({Key? key, required this.chartData, this.isPlaying = false})
+      : super(key: key);
 
   @override
   State<BarChartWidget> createState() => _BarChartWidgetState();

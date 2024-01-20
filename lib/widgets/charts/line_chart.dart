@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class LineChartWidget extends StatefulWidget {
-  bool isPlaying = false;
-  LineChartWidget({super.key});
+  final bool isPlaying = false;
+  final List<Map<String, dynamic>> chartData;
+  LineChartWidget({Key? key, required this.chartData}) : super(key: key);
 
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
@@ -19,7 +19,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     Colors.white,
     Colors.blue.shade800,
   ];
-  // final Duration animDuration = const Duration(milliseconds: 250);
   bool showAvg = false;
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -30,14 +29,23 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     );
     Widget text;
     switch (value.toInt()) {
-      case 2:
+      case 1:
+        text = const Text('JAN', style: style);
+        break;
+      case 3:
         text = const Text('MAR', style: style);
         break;
       case 5:
-        text = const Text('JUN', style: style);
+        text = const Text('MAY', style: style);
         break;
-      case 8:
+      case 7:
+        text = const Text('JUL', style: style);
+        break;
+      case 9:
         text = const Text('SEP', style: style);
+        break;
+      case 11:
+        text = const Text('NOV', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -59,13 +67,19 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     String text;
     switch (value.toInt()) {
       case 1:
-        text = '10K';
+        text = '1';
         break;
       case 3:
-        text = '30k';
+        text = '3';
         break;
       case 5:
-        text = '50k';
+        text = '5';
+        break;
+      case 7:
+        text = '7';
+        break;
+      case 9:
+        text = '9';
         break;
       default:
         return Container();
@@ -79,8 +93,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
-        horizontalInterval: 2,
-        verticalInterval: 3,
+        horizontalInterval: 1,
+        verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
             color: Color.fromARGB(255, 179, 231, 255),
@@ -112,10 +126,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: false,
+            showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 35,
           ),
         ),
       ),
@@ -126,9 +140,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 12,
       minY: 0,
-      maxY: 9,
+      maxY: 10,
       lineBarsData: [
         LineChartBarData(
           spots: const [
@@ -152,7 +166,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           barWidth: 3,
           isStrokeCapRound: true,
           dotData: const FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
             show: true,
@@ -162,7 +176,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   .toList(),
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
-              // transform: GradientRotation(1.5 * pi),
             ),
           ),
         ),
@@ -203,9 +216,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: false,
+            showTitles: true,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 35,
             interval: 1,
           ),
         ),
@@ -221,19 +234,19 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         border: Border.all(color: Colors.lightBlue),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 12,
       minY: 0,
-      maxY: 6,
+      maxY: 1,
       lineBarsData: [
         LineChartBarData(
           spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
+            FlSpot(0, 0.344),
+            FlSpot(2.6, 0.344),
+            FlSpot(4.9, 0.344),
+            FlSpot(6.8, 0.344),
+            FlSpot(8, 0.344),
+            FlSpot(9.5, 0.344),
+            FlSpot(11, 0.344),
           ],
           isCurved: true,
           gradient: LinearGradient(
@@ -259,10 +272,25 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        TextButton(
+          onPressed: () {
+            setState(() {
+              showAvg = !showAvg;
+            });
+          },
+          child: Text(
+            'avg',
+            style: TextStyle(
+              fontSize: 12,
+              color: showAvg ? Colors.orange : Colors.red,
+            ),
+          ),
+        ),
         AspectRatio(
-          aspectRatio: 1.20,
+          aspectRatio: 1.2,
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 1.0,
@@ -270,24 +298,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             ),
             child: LineChart(
               showAvg ? avgData() : mainLineData(),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                showAvg = !showAvg;
-              });
-            },
-            child: Text(
-              'avg',
-              style: TextStyle(
-                fontSize: 12,
-                color: showAvg ? Colors.orange : Colors.red,
-              ),
             ),
           ),
         ),
