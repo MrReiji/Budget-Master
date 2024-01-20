@@ -1,4 +1,5 @@
 import 'package:budget_master/models/filter_options.dart';
+import 'package:budget_master/screens/receipt_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:budget_master/constants/constants.dart';
@@ -186,6 +187,17 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: 10.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // Przenieś się na stronę receipt_page.dart
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReceiptScreen()),
+                    );
+                  },
+                  child: Text('[TEST] Receipt Page'),
+                ),
+                SizedBox(height: 50.0),
                 LatestReceipts(
                   filterOption: filterOption,
                   sortDirection: sortDirection,

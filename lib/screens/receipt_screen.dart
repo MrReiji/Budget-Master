@@ -94,8 +94,15 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                           SizedBox(
                             height: 6.0,
                           ),
+                          getDataRow("STORE NAME:", "XYZ"),
+                          getDataRow("DATE:", "20-01-2024"),
+                          getDataRow("CATEGORY:", "Clothes"),
+                          getDescriptionColumn("datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata"),
+                          SizedBox(
+                            height: 30.0,
+                          ),
                           Text(
-                            "WASHING AND FOLDING",
+                            "PRODUCTS, THEIR AMOUNT AND PRICE:",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(143, 148, 162, 1),
@@ -111,82 +118,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                           SizedBox(
                             height: 30.0,
                           ),
-                          Text(
-                            "IRONING",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(143, 148, 162, 1),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          getItemRow("3", "T-shirt (woman)", "\$30.00"),
                           Divider(),
-                          getSubtotalRow("Subtotal", "\$200.00"),
-                          getSubtotalRow("Delivery", "\$225.00"),
-                          SizedBox(
-                            height: 10.0,
-                          ),
                           getTotalRow("Total", "\$225.00"),
                         ],
                       ),
                     ),
                     SizedBox(height: 10.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      padding: EdgeInsets.all(16.0),
-                      height: 127,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            "Your clothes are now washing.",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
-                                  color: Color.fromRGBO(74, 77, 84, 1),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "Estimated Delivery\n",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(143, 148, 162, 1),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "24 January 2021",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(74, 77, 84, 1),
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Image.asset(
-                                "assets/washlogo.png",
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -280,6 +217,68 @@ Widget getItemRow(String count, String item, String price) {
             fontSize: 15.0,
           ),
         )
+      ],
+    ),
+  );
+}
+
+Widget getDataRow(String topic, String data) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 8.0),
+    child: Row(
+      children: [
+        Text(
+          topic,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Color.fromRGBO(143, 148, 162, 1),
+          ),
+        ),
+        Spacer(),
+        Text(
+          data,
+          style: TextStyle(
+            color: Color.fromRGBO(74, 77, 84, 1),
+            fontSize: 15.0,
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget getDescriptionColumn(String data) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 8.0),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "DESCRIPTION:",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color.fromRGBO(143, 148, 162, 1),
+              ),
+            ),
+          ],
+        ),
+        Container(
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                    child: Text(
+                      data,
+                      style: TextStyle(
+                        color: Color.fromRGBO(74, 77, 84, 1),
+                        fontSize: 15.0,
+                      ),
+                    ),
+                ),
+              ],
+            )
+        ),
       ],
     ),
   );
