@@ -1,4 +1,5 @@
 import 'package:budget_master/blocs/form_blocs/receipt_form_block.dart';
+import 'package:budget_master/widgets/receipts/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,13 +16,13 @@ class AddReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReceiptFormBlock(),
+      create: (context) => ReceiptFormBloc(),
       child: Builder(builder: (context) {
-        final receiptFormBloc = context.read<ReceiptFormBlock>();
+        final receiptFormBloc = context.read<ReceiptFormBloc>();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Constants.primaryColor,
-          body: FormBlocListener<ReceiptFormBlock, String, String>(
+          body: FormBlocListener<ReceiptFormBloc, String, String>(
             onSubmitting: (context, state) {
               LoadingDialog.show(context);
             },
@@ -95,9 +96,10 @@ class AddReceiptPage extends StatelessWidget {
                               children: [
                                 InputWidget(
                                   topLabel: "Store Name",
-                                  hintText: "Store Name",
-                                  prefixIcon: Icons.apple,
-                                  textFieldBloc: receiptFormBloc.storeName,
+                                  hintText: "Where did you make shopping?",
+                                  prefixIcon:
+                                      Icons.store_mall_directory_outlined,
+                                  fieldBloc: receiptFormBloc.storeName,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -107,7 +109,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the date of purchase",
                                   textInputType: TextInputType.datetime,
                                   prefixIcon: Icons.date_range_rounded,
-                                  textFieldBloc: receiptFormBloc.purchaseDate,
+                                  fieldBloc: receiptFormBloc.purchaseDate,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -117,7 +119,7 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter the expense category",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.category_outlined,
-                                  textFieldBloc: receiptFormBloc.category,
+                                  fieldBloc: receiptFormBloc.category,
                                 ),
                                 const SizedBox(
                                   height: 5.0,
@@ -127,44 +129,98 @@ class AddReceiptPage extends StatelessWidget {
                                   hintText: "Enter description if needed",
                                   textInputType: TextInputType.text,
                                   prefixIcon: Icons.description_rounded,
-                                  textFieldBloc: receiptFormBloc.description,
+                                  fieldBloc: receiptFormBloc.description,
                                 ),
                                 const SizedBox(
-                                  height: 5.0,
+                                  height: 15.0,
                                 ),
-                                BlocBuilder<
-                                    ListFieldBloc<ProductFieldBloc, dynamic>,
-                                    ListFieldBlocState<ProductFieldBloc,
-                                        dynamic>>(
-                                  bloc: receiptFormBloc.product,
-                                  builder: (context, state) {
-                                    if (state.fieldBlocs.isNotEmpty) {
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemCount: state.fieldBlocs.length,
-                                        itemBuilder: (context, i) {
-                                          return ProductCard(
-                                            productIndex: i,
-                                            productField: state.fieldBlocs[i],
-                                            onRemoveProduct: () =>
-                                                receiptFormBloc
-                                                    .removeProduct(i),
-                                          );
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 24.0,
+                                    horizontal: 16.0,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Receipt Details",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              color:
+                                                  Color.fromRGBO(74, 77, 84, 1),
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                      ),
+                                      SizedBox(
+                                        height: 6.0,
+                                      ),
+                                      Text(
+                                        "PRODUCT NAME AND ITS PRICE",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              Color.fromRGBO(143, 148, 162, 1),
+                                        ),
+                                      ),
+                                      BlocBuilder<
+                                          ListFieldBloc<ProductFieldBloc,
+                                              dynamic>,
+                                          ListFieldBlocState<ProductFieldBloc,
+                                              dynamic>>(
+                                        bloc: receiptFormBloc.products,
+                                        builder: (context, state) {
+                                          if (state.fieldBlocs.isNotEmpty) {
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount:
+                                                  state.fieldBlocs.length,
+                                              itemBuilder: (context, i) {
+                                                return ProductCard(
+                                                  productIndex: i,
+                                                  productField:
+                                                      state.fieldBlocs[i],
+                                                  onRemoveProduct: () =>
+                                                      receiptFormBloc
+                                                          .removeProduct(i),
+                                                );
+                                              },
+                                            );
+                                          }
+                                          return Container();
                                         },
-                                      );
-                                    }
-                                    return Container();
-                                  },
+                                      ),
+                                      SizedBox(
+                                        height: 20.0,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          ElevatedButton(
+                                            onPressed:
+                                                receiptFormBloc.addProduct,
+                                            child: const Text('Add product'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    ElevatedButton(
-                                      onPressed: receiptFormBloc.addProduct,
-                                      child: const Text('Add product'),
-                                    ),
                                     const SizedBox(height: 8.0),
                                     Row(
                                       mainAxisAlignment:
@@ -172,7 +228,7 @@ class AddReceiptPage extends StatelessWidget {
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
-                                          width: 100.0,
+                                          width: 77.5,
                                           color: Colors.black,
                                         ),
                                         const SizedBox(width: 4.0),
@@ -193,7 +249,7 @@ class AddReceiptPage extends StatelessWidget {
                                         const SizedBox(width: 4.0),
                                         Container(
                                           height: 1.0,
-                                          width: 100.0,
+                                          width: 77.5,
                                           color: Colors.black,
                                         ),
                                       ],
@@ -222,7 +278,7 @@ class AddReceiptPage extends StatelessWidget {
                                       children: <Widget>[
                                         Container(
                                           height: 1.0,
-                                          width: 270.0,
+                                          width: 312.0,
                                           color: Colors.black,
                                         ),
                                       ],
@@ -252,77 +308,6 @@ class AddReceiptPage extends StatelessWidget {
           ),
         );
       }),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final int productIndex;
-  final ProductFieldBloc productField;
-
-  final VoidCallback onRemoveProduct;
-
-  const ProductCard({
-    super.key,
-    required this.productIndex,
-    required this.productField,
-    required this.onRemoveProduct,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Constants.primaryColor,
-      margin: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Product #${productIndex + 1}',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: onRemoveProduct,
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.productName,
-                      decoration: const InputDecoration(
-                        labelText: 'Product Name',
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFieldBlocBuilder(
-                      textFieldBloc: productField.price,
-                      decoration: const InputDecoration(
-                        labelText: 'Price',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

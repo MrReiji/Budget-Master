@@ -113,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
-                                  textFieldBloc: loginFormBloc.email,
+                                  fieldBloc: loginFormBloc.email,
                                 ),
                                 SizedBox(
                                   height: 25.0,
@@ -127,7 +127,7 @@ class LoginScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: loginFormBloc.password,
+                                  fieldBloc: loginFormBloc.password,
                                 ),
                                 SizedBox(
                                   height: 15.0,

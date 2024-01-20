@@ -109,7 +109,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.newUsername,
                                   ],
-                                  textFieldBloc: signUpFormBloc.username,
+                                  fieldBloc: signUpFormBloc.username,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -122,7 +122,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.email,
                                   ],
-                                  textFieldBloc: signUpFormBloc.email,
+                                  fieldBloc: signUpFormBloc.email,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -136,7 +136,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: signUpFormBloc.password,
+                                  fieldBloc: signUpFormBloc.password,
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -150,7 +150,7 @@ class SignUpScreen extends StatelessWidget {
                                   autofillHints: const [
                                     AutofillHints.password,
                                   ],
-                                  textFieldBloc: signUpFormBloc.confirmPassword,
+                                  fieldBloc: signUpFormBloc.confirmPassword,
                                 ),
                                 SizedBox(
                                   height: 15.0,

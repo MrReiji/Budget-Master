@@ -1,140 +1,107 @@
+import 'package:budget_master/models/filter_options.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/order.dart';
-import '../../constants/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:budget_master/models/receipt.dart';
+import 'package:budget_master/models/product.dart';
 import 'receipt_card.dart';
+import 'package:budget_master/pages/home_page.dart';
 
 class LatestReceipts extends StatelessWidget {
-  final List<Order> receipts = [
-    Order(
-      id: 507,
-      deliveryAddress: "New Times Square",
-      arrivalDate: DateTime(2020, 1, 23),
-      placedDate: DateTime(2020, 1, 17),
-      status: OrderStatus.DELIVERING,
-    ),
-    Order(
-      id: 536,
-      deliveryAddress: "Victoria Square",
-      arrivalDate: DateTime(2020, 1, 21),
-      placedDate: DateTime(2020, 1, 19),
-      status: OrderStatus.PICKING_UP,
-    ),
-    Order(
-      id: 507,
-      deliveryAddress: "New Times Square",
-      arrivalDate: DateTime(2020, 1, 23),
-      placedDate: DateTime(2020, 1, 17),
-      status: OrderStatus.DELIVERING,
-    ),
-    Order(
-      id: 536,
-      deliveryAddress: "Victoria Square",
-      arrivalDate: DateTime(2020, 1, 21),
-      placedDate: DateTime(2020, 1, 19),
-      status: OrderStatus.PICKING_UP,
-    ),
-    Order(
-      id: 507,
-      deliveryAddress: "New Times Square",
-      arrivalDate: DateTime(2020, 1, 23),
-      placedDate: DateTime(2020, 1, 17),
-      status: OrderStatus.DELIVERING,
-    ),
-    Order(
-      id: 536,
-      deliveryAddress: "Victoria Square",
-      arrivalDate: DateTime(2020, 1, 21),
-      placedDate: DateTime(2020, 1, 19),
-      status: OrderStatus.PICKING_UP,
-    ),
-    Order(
-      id: 507,
-      deliveryAddress: "New Times Square",
-      arrivalDate: DateTime(2020, 1, 23),
-      placedDate: DateTime(2020, 1, 17),
-      status: OrderStatus.DELIVERING,
-    ),
-    Order(
-      id: 536,
-      deliveryAddress: "Victoria Square",
-      arrivalDate: DateTime(2020, 1, 21),
-      placedDate: DateTime(2020, 1, 19),
-      status: OrderStatus.PICKING_UP,
-    ),
-    Order(
-      id: 507,
-      deliveryAddress: "New Times Square",
-      arrivalDate: DateTime(2020, 1, 23),
-      placedDate: DateTime(2020, 1, 17),
-      status: OrderStatus.DELIVERING,
-    ),
-    Order(
-      id: 536,
-      deliveryAddress: "Victoria Square",
-      arrivalDate: DateTime(2020, 1, 21),
-      placedDate: DateTime(2020, 1, 19),
-      status: OrderStatus.PICKING_UP,
-    )
-  ];
+  final FilterOption filterOption;
+  final SortDirection sortDirection;
+
+  LatestReceipts({
+    required this.filterOption,
+    required this.sortDirection,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 20.0,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 24.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Query receiptsQuery = FirebaseFirestore.instance
+        .collection('receipts')
+        .where('creatorID', isEqualTo: FirebaseAuth.instance.currentUser!.uid);
+
+    String orderByField = filterOption == FilterOption.purchaseDate
+        ? 'purchaseDate'
+        : 'totalPrice';
+    bool isDescending = sortDirection == SortDirection.descending;
+
+    receiptsQuery =
+        receiptsQuery.orderBy(orderByField, descending: isDescending);
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream:
+          receiptsQuery.snapshots().cast<QuerySnapshot<Map<String, dynamic>>>(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Latest Receipts",
-                  style: TextStyle(
-                    color: Color.fromRGBO(19, 22, 33, 1),
-                    fontSize: 18.0,
-                  ),
+                Image.asset(
+                  'assets/empty_list_image.png',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
                 Text(
-                  "Filter by",
-                  style: TextStyle(
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
+                  "Empty list? Add your first expenses!",
+                  style: TextStyle(fontSize: 20),
+                ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          ListView.separated(
+          );
+        }
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+          return ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 10.0,
             ),
             physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return ReceiptCard(
-                order: receipts[index],
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var receiptData = snapshot.data!.docs[index].data();
+              var products =
+                  List.from(receiptData['products']).map<Product>((item) {
+                return Product(
+                    productName: item['productName'], price: item['price']);
+              }).toList();
+
+              Receipt receipt = Receipt(
+                receiptInputMethod:
+                    ReceiptInputMethod.MANUAL, // Or other method
+                products: products,
+                storeName: receiptData['storeName'],
+                purchaseDate: receiptData['purchaseDate'],
+                category: receiptData['category'],
+                description: receiptData['description'],
+                totalPrice: receiptData['totalPrice'],
               );
+
+              return ReceiptCard(receipt: receipt);
             },
             separatorBuilder: (BuildContext context, int index) {
               return SizedBox(
-                height: 15.0,
+                height: 2.0,
               );
             },
-            itemCount: receipts.length,
-          )
-          // Let's create an order model
-        ],
-      ),
+          );
+        }
+        return Center(
+          child: Text(
+            'Something went wrong...',
+            style: TextStyle(fontSize: 20),
+          ),
+        );
+      },
     );
   }
 }
