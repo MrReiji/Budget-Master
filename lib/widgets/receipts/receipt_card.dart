@@ -28,7 +28,7 @@ class ReceiptCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.push(AppRouterPaths.receipt);
+        context.push(AppRouterPaths.receipt, extra: receipt);
       },
       child: Container(
         decoration: BoxDecoration(

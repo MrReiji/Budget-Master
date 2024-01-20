@@ -1,14 +1,12 @@
+import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-class ReceiptScreen extends StatefulWidget {
-  const ReceiptScreen({super.key});
-  @override
-  _ReceiptScreenState createState() => _ReceiptScreenState();
-}
+class ReceiptScreen extends StatelessWidget {
+  const ReceiptScreen({required this.receipt, Key? key}) : super(key: key);
 
-class _ReceiptScreenState extends State<ReceiptScreen> {
+  final Receipt receipt;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +49,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                 ),
                           ),
                           TextSpan(
-                            text: "Receipt #521",
+                            text: "Receipt",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -94,13 +92,14 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                           SizedBox(
                             height: 10.0,
                           ),
-                          getDataRow("STORE NAME:", "XYZ"),
-                          getDataRow("DATE:", "20-01-2024"),
-                          getDataRow("CATEGORY:", "Clothes"),
+                          getDataRow("STORE NAME:", receipt.storeName),
+                          getDataRow("DATE:", receipt.purchaseDate),
+                          getDataRow("CATEGORY:", receipt.category),
                           getDescriptionColumn(
-                              "Description that you provide will be shown here. You can add any description here. This is just a dummy text."),
+                            receipt.description,
+                          ),
                           SizedBox(
-                            height: 10.0,
+                            height: 20.0,
                           ),
                           Text(
                             "PRODUCTS, THEIR AMOUNT AND PRICE:",
@@ -109,18 +108,25 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                               color: Color.fromRGBO(143, 148, 162, 1),
                             ),
                           ),
-                          SizedBox(
-                            height: 10.0,
+                          ListView.builder(
+                            padding: EdgeInsets.only(top: 10.0),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: receipt.products.length,
+                            itemBuilder: (context, index) {
+                              var product = receipt.products[index];
+                              return getItemRow(
+                                '1',
+                                product.productName,
+                                product.price + " zł",
+                              );
+                            },
                           ),
-                          getItemRow("3", "T-shirts (man)", "\$30.00"),
-                          getItemRow("2", "T-shirts (man)", "\$40.00"),
-                          getItemRow("4", "Pants (man)", "\$80.00"),
-                          getItemRow("1", "Jeans (man)", "\$20.00"),
                           SizedBox(
-                            height: 30.0,
+                            height: 20.0,
                           ),
                           Divider(),
-                          getTotalRow("Total", "\$225.00"),
+                          getTotalRow("Total", receipt.totalPrice + " zł"),
                         ],
                       ),
                     ),
@@ -249,37 +255,34 @@ Widget getDataRow(String topic, String data) {
 }
 
 Widget getDescriptionColumn(String data) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 8.0),
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              "DESCRIPTION:",
-              textAlign: TextAlign.left,
+  return Column(
+    children: [
+      Row(
+        children: [
+          Text(
+            "DESCRIPTION:",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Color.fromRGBO(143, 148, 162, 1),
+            ),
+          ),
+        ],
+      ),
+      Container(
+          child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Text(
+              data,
               style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Color.fromRGBO(143, 148, 162, 1),
+                color: Color.fromRGBO(74, 77, 84, 1),
+                fontSize: 15.0,
               ),
             ),
-          ],
-        ),
-        Container(
-            child: Row(
-          children: <Widget>[
-            Flexible(
-              child: Text(
-                data,
-                style: TextStyle(
-                  color: Color.fromRGBO(74, 77, 84, 1),
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ],
-        )),
-      ],
-    ),
+          ),
+        ],
+      )),
+    ],
   );
 }

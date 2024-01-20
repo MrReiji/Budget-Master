@@ -1,3 +1,4 @@
+import 'package:budget_master/models/receipt.dart';
 import 'package:budget_master/screens/auth/login_screen.dart';
 import 'package:budget_master/screens/receipt_screen.dart';
 import 'package:budget_master/screens/auth/signup_screen.dart';
@@ -44,7 +45,8 @@ class AppRouter {
           name: 'receipt',
           path: AppRouterPaths.receipt,
           builder: (BuildContext context, GoRouterState state) {
-            return const ReceiptScreen();
+            final Receipt receipt = state.extra as Receipt;
+            return ReceiptScreen(receipt: receipt);
           }),
     ],
   );
