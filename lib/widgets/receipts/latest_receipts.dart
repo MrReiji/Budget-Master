@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:budget_master/models/receipt.dart';
 import 'package:budget_master/models/product.dart';
 import 'receipt_card.dart';
-import 'package:budget_master/pages/home_page.dart';
 
 class LatestReceipts extends StatelessWidget {
   final FilterOption filterOption;
