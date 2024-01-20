@@ -1,24 +1,24 @@
-import 'dart:async';
 import 'package:budget_master/constants/constants.dart';
 import 'package:budget_master/widgets/charts/bar_chart%20copy.dart';
 import 'package:budget_master/widgets/charts/line_chart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChartsPage extends StatefulWidget {
+class ChartsPage extends StatelessWidget {
   const ChartsPage({super.key});
 
-  @override
-  State<ChartsPage> createState() => _ChartsPageState();
-}
-
-class _ChartsPageState extends State<ChartsPage> {
   final Duration animDuration = const Duration(milliseconds: 250);
-  int touchedIndex = -1;
-  bool isPlaying = false;
-  Color touchedBarColor = Colors.blue.shade800;
-  Color barBackgroundColor = Constants.primaryColor;
-  // ChartType selectedChartType = ChartType.bar;
 
+  // int touchedIndex = -1;
+
+  final bool isPlaying = false;
+
+  // Color touchedBarColor = Colors.blue.shade800;
+
+  // Color barBackgroundColor = Constants.primaryColor;
+
+  // ChartType selectedChartType = ChartType.bar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,46 +36,16 @@ class _ChartsPageState extends State<ChartsPage> {
                   horizontal: 16.0,
                   vertical: 15.0,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Text(
-                      "Charts",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                    ),
-                    // Dodaj przyciski do wyboru rodzaju wykresu
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     ElevatedButton(
-                    //       onPressed: () {
-                    //         setState(() {
-                    //           selectedChartType = ChartType.bar;
-                    //         });
-                    //       },
-                    //       child: Text('Bar Chart'),
-                    //     ),
-                    //     ElevatedButton(
-                    //       onPressed: () {
-                    //         setState(() {
-                    //           selectedChartType = ChartType.line;
-                    //         });
-                    //       },
-                    //       child: Text('Line Chart'),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 35),
+                  child: Text(
+                    "Charts",
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 35.0,
               ),
               Flexible(
                 child: Container(
@@ -94,60 +64,127 @@ class _ChartsPageState extends State<ChartsPage> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 50.0,
+                        height: 35.0,
                       ),
-                      Container(
-                        // height: 300,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                  ),
-                                  child: Text(
-                                    "Yearly Spendings",
-                                    textAlign: TextAlign.right,
-                                  ),
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: FirebaseFirestore.instance
+                              .collection('receipts')
+                              .where('creatorID',
+                                  isEqualTo:
+                                      FirebaseAuth.instance.currentUser!.uid)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/empty_list_image.png',
+                                      width: 300,
+                                      height: 300,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Text(
+                                      "No charts? Add your first expenses!",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.0,
-                            ),
-                            buildChart(),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 100.0,
-                      ),
-                      Container(
-                        // height: 320,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: Text(
-                                    "Weekly Spendings",
-                                    textAlign: TextAlign.left,
-                                  ),
+                              );
+                            }
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.isNotEmpty) {
+                              List<Map<String, dynamic>> chartData = snapshot
+                                  .data!.docs
+                                  .fold<List<Map<String, dynamic>>>([],
+                                      (acc, doc) {
+                                // Extract the purchaseDate and totalPriceString from each document in the snapshot.
+                                final purchaseDate =
+                                    doc.data()['purchaseDate'] as String;
+                                final totalPriceString =
+                                    doc.data()['totalPrice'] as String;
+
+                                final totalPrice =
+                                    double.tryParse(totalPriceString) ?? 0;
+
+                                final existingIndex = acc.indexWhere((item) =>
+                                    item['purchaseDate'] == purchaseDate);
+
+                                if (existingIndex != -1) {
+                                  // If an entry with the same purchaseDate already exists, update the total price.
+                                  acc[existingIndex]['totalPrice'] +=
+                                      totalPrice;
+                                } else {
+                                  // If not, add a new entry to the accumulator list.
+                                  acc.add({
+                                    'purchaseDate': purchaseDate,
+                                    'totalPrice': totalPrice,
+                                  });
+                                }
+
+                                return acc;
+                              });
+
+                              return Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 10,
+                                      ),
+                                      child: Text(
+                                        "Yearly Spendings",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    LineChartWidget(
+                                      chartData: chartData,
+                                    ),
+                                    SizedBox(
+                                      height: 50.0,
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        "Weekly Spendings",
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25.0,
+                                    ),
+                                    Container(
+                                        height: 300,
+                                        child: BarChartWidget(
+                                            chartData: chartData,
+                                            isPlaying: isPlaying)),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.0,
-                            ),
-                            Container(height: 300, child: buildChart2()),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 100.0,
-                      ),
+                              );
+                            }
+                            return Center(
+                              child: Text(
+                                'Something went wrong...',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            );
+                          }),
+                      // SizedBox(
+                      //   height: 100.0,
+                      // ),
                     ],
                   ),
                 ),
@@ -158,37 +195,4 @@ class _ChartsPageState extends State<ChartsPage> {
       ),
     );
   }
-
-  // Funkcja do renderowania odpowiedniego wykresu w zależności od wybranej opcji
-  Widget buildChart() {
-    return LineChartWidget();
-    // switch (selectedChartType) {
-    //   case ChartType.bar:
-    //     return BarChartWidget(
-    //       isPlaying: isPlaying,
-    //     );
-    //   case ChartType.line:
-    //     return LineChartWidget();
-    // }
-  }
-
-  Widget buildChart2() {
-    return BarChartWidget(isPlaying: isPlaying);
-  }
-
-  Future<dynamic> refreshState() async {
-    setState(() {});
-    await Future<dynamic>.delayed(
-      animDuration + const Duration(milliseconds: 50),
-    );
-    if (isPlaying) {
-      await refreshState();
-    }
-  }
 }
-
-// Dodane wyliczenie do przechowywania rodzaju wykresu
-// enum ChartType {
-//   bar,
-//   line,
-// }
