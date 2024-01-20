@@ -3,6 +3,7 @@ import 'package:budget_master/models/product.dart';
 enum ReceiptInputMethod { MANUAL, OCR }
 
 class Receipt {
+  final String id;
   final String storeName;
   final String purchaseDate;
   final String category;
@@ -12,7 +13,8 @@ class Receipt {
   final String totalPrice;
 
   Receipt(
-      {required this.storeName,
+      {required this.id,
+      required this.storeName,
       required this.purchaseDate,
       required this.category,
       required this.description,
