@@ -40,36 +40,41 @@ class ReceiptCard extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             getOrderIconWidget(receipt.receiptInputMethod),
             SizedBox(width: 25.0),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    productNames,
-                    style: TextStyle(
-                      color: Constants.mainTextColor,
-                      fontSize: 16.0,
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      productNames,
+                      style: TextStyle(
+                        color: Constants.mainTextColor,
+                        fontSize: 16.0,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5.0),
-                  textRow("Price of expenses:", receipt.totalPrice),
-                  SizedBox(height: 5.0),
-                  textRow("Purchased on:", receipt.purchaseDate),
-                ],
+                    SizedBox(height: 5.0),
+                    textRow("Price of expenses:", receipt.totalPrice),
+                    SizedBox(height: 5.0),
+                    textRow("Purchased on:", receipt.purchaseDate),
+                  ],
+                ),
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.cancel),
-              iconSize: 50,
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('receipts')
-                    .doc(receipt.id)
-                    .delete();
-              },
+            Container(
+              child: IconButton(
+                icon: Icon(Icons.cancel),
+                iconSize: 50,
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection('receipts')
+                      .doc(receipt.id)
+                      .delete();
+                },
+              ),
             ),
           ],
         ),
