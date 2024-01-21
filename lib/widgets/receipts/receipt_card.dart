@@ -40,7 +40,6 @@ class ReceiptCard extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getOrderIconWidget(receipt.receiptInputMethod),
             SizedBox(width: 25.0),
