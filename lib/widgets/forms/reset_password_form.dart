@@ -33,6 +33,8 @@ class ResetPasswordForm extends StatelessWidget {
             },
             child: Center(
               child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Card(
                   surfaceTintColor: Colors.white,
                   margin: EdgeInsets.all(20),
