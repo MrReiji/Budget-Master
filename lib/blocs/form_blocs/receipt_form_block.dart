@@ -79,28 +79,42 @@ class ReceiptFormBloc extends FormBloc<String, String> {
         // Actually do it always
         // In case of any inconsistencies, probably just throw an error rn until we manage to error-catch it properly
         // Which (todo) isn't done yet
-        //if (i + 1 < n_res.length) {
-        //  if (next_line_is_mostly_numbers) {
-        //    if (next_line_has_mult) {
-        //      select_next_line_as_value;
-        //      select_this_line_as_name;
-        //    } else if (this_line_has_mult) {
-        //      go_to_the_mult_div_and_a_little_to_the_left___choose_that_as_pivot;
-        //      select_left_og_pivot_as_name;
-        //      select_right_ofpivot_and_next_line_as_value;
-        //    }
-        //  }
-        //} else if (this_line_has_mult) {
-        //  select_this_line_as_value;
-        //  go_to_the_mult_div_and_a_little_to_the_left___choose_that_as_pivot;
-        //  split_at_pivot;
-        //  things_on_left_of_pivot_are_name;
-        //  things_on_right_of_pivot_are_value_for_now;
-        //}
+        var value = "v_test";
+        var name = "n_test";
+        if (i + 1 < n_res.length) {
+          var letters = 0;
+          var numbers = 0;
+          for (var char in n_res[i+1].characters){
+            if(RegExp('[a-zA-Z]').hasMatch(char))
+            {
+             letters +=1; 
+            }
+            else if (RegExp('\\d').hasMatch(char)){
+              numbers+=1;
+            } 
+          }
+          print(letters);
+          print(numbers);
+          if (numbers>letters) {
+            if (RegExp('[x*]').hasMatch(n_res[i+1])) {
+              value = n_res[i+1];
+              name = n_res[i];
+              i+=1;
+            } else if (RegExp('[x*]').hasMatch(n_res[i])) {
+              name = RegExp('.*\d[\s\d]+[x*].*').firstMatch(n_res[i]) as String;
+              value = RegExp('\d[\s\d]+[x*].*').firstMatch(n_res[i]) as String;
+              value += n_res[i+1].replaceAll('\n', ' ');
+              i+=1;
+            }
+          }
+        } else if (RegExp('[x*]').hasMatch(n_res[i])) {
+          name = RegExp('.*\d[\s\d]+[x*].*').firstMatch(n_res[i]) as String;
+          value = RegExp('\d[\s\d]+[x*].*').firstMatch(n_res[i]) as String;
+        }
         products.addFieldBloc(ProductFieldBloc(
             productName:
-                TextFieldBloc(name: 'productName', initialValue: n_res[i]),
-            price: TextFieldBloc(name: 'price', initialValue: 'test')));
+                TextFieldBloc(name: 'productName', initialValue: name),
+            price: TextFieldBloc(name: 'price', initialValue: value)));
       }
     }
   }
