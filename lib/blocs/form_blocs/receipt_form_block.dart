@@ -48,9 +48,9 @@ class ReceiptFormBloc extends FormBloc<String, String> {
     );
   }
 
-  void loadFromGallery() async {
+  void loadAndProcessImage(source) async {
     final XFile? gallery_image =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: source);
     if (gallery_image != null) {
       var text =
           FlutterTesseractOcr.extractText(gallery_image.path, language: 'pol');
