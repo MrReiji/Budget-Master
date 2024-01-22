@@ -34,14 +34,11 @@ class InputWidget extends StatelessWidget {
           SizedBox(height: 5.0),
         ],
 
-        ConstrainedBox(
-          constraints: BoxConstraints(minHeight: height),
-          child: Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: buildFieldBlocBuilder()),
-        ),
+        Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: buildFieldBlocBuilder()),
       ],
     );
   }
@@ -101,6 +98,8 @@ class InputWidget extends StatelessWidget {
         fontSize: 14.0,
         color: Color.fromRGBO(105, 108, 121, 0.7),
       ),
+      errorMaxLines: 4,
+      // helperText: '',
     );
   }
 }

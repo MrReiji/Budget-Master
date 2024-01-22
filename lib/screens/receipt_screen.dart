@@ -1,14 +1,12 @@
+import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-class ReceiptScreen extends StatefulWidget {
-  const ReceiptScreen({super.key});
-  @override
-  _ReceiptScreenState createState() => _ReceiptScreenState();
-}
+class ReceiptScreen extends StatelessWidget {
+  const ReceiptScreen({required this.receipt, Key? key}) : super(key: key);
 
-class _ReceiptScreenState extends State<ReceiptScreen> {
+  final Receipt receipt;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +49,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                 ),
                           ),
                           TextSpan(
-                            text: "Receipt #521",
+                            text: "Receipt",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -92,101 +90,47 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                                 ),
                           ),
                           SizedBox(
-                            height: 6.0,
+                            height: 10.0,
+                          ),
+                          getDataRow("STORE NAME:", receipt.storeName),
+                          getDataRow("DATE:", receipt.purchaseDate),
+                          getDataRow("CATEGORY:", receipt.category),
+                          getDescriptionColumn(
+                            receipt.description,
+                          ),
+                          SizedBox(
+                            height: 20.0,
                           ),
                           Text(
-                            "WASHING AND FOLDING",
+                            "PRODUCTS, THEIR AMOUNT AND PRICE:",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(143, 148, 162, 1),
                             ),
                           ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          getItemRow("3", "T-shirts (man)", "\$30.00"),
-                          getItemRow("2", "T-shirts (man)", "\$40.00"),
-                          getItemRow("4", "Pants (man)", "\$80.00"),
-                          getItemRow("1", "Jeans (man)", "\$20.00"),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          Text(
-                            "IRONING",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(143, 148, 162, 1),
-                            ),
+                          ListView.builder(
+                            padding: EdgeInsets.only(top: 10.0),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: receipt.products.length,
+                            itemBuilder: (context, index) {
+                              var product = receipt.products[index];
+                              return getItemRow(
+                                '1',
+                                product.productName,
+                                product.price + " zł",
+                              );
+                            },
                           ),
                           SizedBox(
-                            height: 10.0,
+                            height: 20.0,
                           ),
-                          getItemRow("3", "T-shirt (woman)", "\$30.00"),
                           Divider(),
-                          getSubtotalRow("Subtotal", "\$200.00"),
-                          getSubtotalRow("Delivery", "\$225.00"),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          getTotalRow("Total", "\$225.00"),
+                          getTotalRow("Total", receipt.totalPrice + " zł"),
                         ],
                       ),
                     ),
                     SizedBox(height: 10.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      padding: EdgeInsets.all(16.0),
-                      height: 127,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            "Your clothes are now washing.",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
-                                  color: Color.fromRGBO(74, 77, 84, 1),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "Estimated Delivery\n",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(143, 148, 162, 1),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "24 January 2021",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(74, 77, 84, 1),
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Image.asset(
-                                "assets/washlogo.png",
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -282,5 +226,63 @@ Widget getItemRow(String count, String item, String price) {
         )
       ],
     ),
+  );
+}
+
+Widget getDataRow(String topic, String data) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 8.0),
+    child: Row(
+      children: [
+        Text(
+          topic,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Color.fromRGBO(143, 148, 162, 1),
+          ),
+        ),
+        Spacer(),
+        Text(
+          data,
+          style: TextStyle(
+            color: Color.fromRGBO(74, 77, 84, 1),
+            fontSize: 15.0,
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget getDescriptionColumn(String data) {
+  return Column(
+    children: [
+      Row(
+        children: [
+          Text(
+            "DESCRIPTION:",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Color.fromRGBO(143, 148, 162, 1),
+            ),
+          ),
+        ],
+      ),
+      Container(
+          child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Text(
+              data,
+              style: TextStyle(
+                color: Color.fromRGBO(74, 77, 84, 1),
+                fontSize: 15.0,
+              ),
+            ),
+          ),
+        ],
+      )),
+    ],
   );
 }

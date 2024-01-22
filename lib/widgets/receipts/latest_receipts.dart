@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:budget_master/models/receipt.dart';
 import 'package:budget_master/models/product.dart';
 import 'receipt_card.dart';
-import 'package:budget_master/pages/home_page.dart';
 
 class LatestReceipts extends StatelessWidget {
   final FilterOption filterOption;
@@ -69,6 +68,8 @@ class LatestReceipts extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var receiptData = snapshot.data!.docs[index].data();
+              final String receiptID = snapshot.data!.docs[index].id;
+
               var products =
                   List.from(receiptData['products']).map<Product>((item) {
                 return Product(
@@ -76,6 +77,7 @@ class LatestReceipts extends StatelessWidget {
               }).toList();
 
               Receipt receipt = Receipt(
+                id: receiptID,
                 receiptInputMethod:
                     ReceiptInputMethod.MANUAL, // Or other method
                 products: products,

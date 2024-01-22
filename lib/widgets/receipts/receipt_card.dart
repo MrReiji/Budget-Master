@@ -1,5 +1,6 @@
 import 'package:budget_master/constants/constants.dart';
 import 'package:budget_master/models/receipt.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
@@ -27,10 +28,9 @@ class ReceiptCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.push(AppRouterPaths.receipt);
+        context.push(AppRouterPaths.receipt, extra: receipt);
       },
       child: Container(
-        //height: 121,
         decoration: BoxDecoration(
           color: Constants.cardBackgroundColor,
           borderRadius: BorderRadius.circular(8.0),
@@ -40,26 +40,40 @@ class ReceiptCard extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             getOrderIconWidget(receipt.receiptInputMethod),
             SizedBox(width: 25.0),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    productNames,
-                    style: TextStyle(
-                      color: Constants.mainTextColor,
-                      fontSize: 16.0,
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      productNames,
+                      style: TextStyle(
+                        color: Constants.mainTextColor,
+                        fontSize: 16.0,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10.0),
-                  textRow("Price of expenses:", receipt.totalPrice),
-                  SizedBox(height: 5.0),
-                  textRow("Purchased on:", receipt.purchaseDate),
-                ],
+                    SizedBox(height: 5.0),
+                    textRow("Price of expenses:", receipt.totalPrice),
+                    SizedBox(height: 5.0),
+                    textRow("Purchased on:", receipt.purchaseDate),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              child: IconButton(
+                icon: Icon(Icons.cancel),
+                iconSize: 50,
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection('receipts')
+                      .doc(receipt.id)
+                      .delete();
+                },
               ),
             ),
           ],

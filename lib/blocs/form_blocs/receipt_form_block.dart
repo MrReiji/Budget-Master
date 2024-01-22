@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class ReceiptFormBloc extends FormBloc<String, String> {
   final String creatorID = FirebaseAuth.instance.currentUser!.uid;
@@ -166,6 +167,12 @@ class ReceiptFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     try {
+      final isInternetAvailable =
+          await InternetConnectionChecker().hasConnection;
+      if (isInternetAvailable == false) {
+        emitFailure(failureResponse: "No internet connection!");
+        return;
+      }
       if (products.value.isEmpty) {
         throw NoProductsException('Please add at least one product.');
       }
