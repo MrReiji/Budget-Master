@@ -3,6 +3,7 @@ import 'package:budget_master/widgets/receipts/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../constants/constants.dart';
 import '../utils/navigation/app_router_paths.dart';
@@ -261,16 +262,22 @@ class AddReceiptPage extends StatelessWidget {
                                         ],
                                       ),
                                       const SizedBox(height: 8.0),
-                                      const Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           ElevatedButton(
-                                            onPressed: null, //TODO addPhoto
+                                            onPressed: () {
+                                            receiptFormBloc.loadAndProcessImage(
+                                                ImageSource.gallery);
+                                          },
                                             child: Text('From gallery'),
                                           ),
                                           ElevatedButton(
-                                            onPressed: null, //TODO addPhoto
+                                            onPressed: () {
+                                            receiptFormBloc.loadAndProcessImage(
+                                                ImageSource.camera);
+                                          },
                                             child: Text('Using camera'),
                                           ),
                                         ],
