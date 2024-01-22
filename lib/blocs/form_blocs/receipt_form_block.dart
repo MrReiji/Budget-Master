@@ -66,15 +66,7 @@ class ReceiptFormBloc extends FormBloc<String, String> {
       try {
         results = extractText(n_res);
       } catch (e) {
-        Fluttertoast.showToast(
-        msg: "Failed to process image",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black12,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
+        emitFailure(failureResponse: "Failed to process image!");
       }
       
       for (var result in results??[]) {
