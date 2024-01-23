@@ -204,7 +204,7 @@ class ReceiptFormBloc extends FormBloc<String, String> {
         name: 'productName',
         validators: [
           FieldBlocValidators.required,
-          maxLengthValidator(30),
+          maxLengthValidator(50),
         ],
       ),
       price: TextFieldBloc(
@@ -283,7 +283,7 @@ class ProductFieldBloc extends GroupFieldBloc {
   }) : super(fieldBlocs: [productName, price]) {
     productName.addValidators([
       FieldBlocValidators.required,
-      maxLengthValidator(30),
+      maxLengthValidator(50),
     ]);
     price.addValidators([
       FieldBlocValidators.required,
