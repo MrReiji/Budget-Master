@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_tesseract_ocr: ^0.4.24 
   image_picker: ^1.0.7
   settings_ui: ^2.0.2
 
@@ -59,8 +58,9 @@ dependencies:
   firebase_storage: ^11.5.6
   fuzzywuzzy: ^1.1.6
   dropdown_button2: ^2.3.9
-  fluttertoast: ^8.2.4
   internet_connection_checker: ^1.0.0+1
+  google_mlkit_text_recognition: ^0.11.0
+  simple_cluster: ^0.3.0
 # dependency_overrides:
 #   test_api: 0.4.18  
 

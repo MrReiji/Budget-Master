@@ -1,16 +1,15 @@
+import 'dart:math';
 import 'package:budget_master/utils/validators/priceValidator.dart';
 import 'package:budget_master/utils/validators/maxLengthValidator.dart';
-import 'dart:convert';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:budget_master/models/product.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:simple_cluster/simple_cluster.dart';
 
 class ReceiptFormBloc extends FormBloc<String, String> {
   final String creatorID = FirebaseAuth.instance.currentUser!.uid;
@@ -50,87 +49,153 @@ class ReceiptFormBloc extends FormBloc<String, String> {
   }
 
   void loadAndProcessImage(source) async {
-    final XFile? gallery_image =
-        await ImagePicker().pickImage(source: source);
+    final XFile? gallery_image = await ImagePicker().pickImage(source: source);
     if (gallery_image != null) {
-      var text =
-          FlutterTesseractOcr.extractText(gallery_image.path, language: 'pol');
-      var res = LineSplitter().convert(await text);
-      List<String> n_res = [];
-      for (var item in res) {
-        if (item.isNotEmpty) {
-          n_res.add(item);
+      // path grabbing works for temporary access as such
+      final inputImage = InputImage.fromFilePath(gallery_image.path);
+      final textRecognizer =
+          TextRecognizer(script: TextRecognitionScript.latin);
+      final RecognizedText recognizedText =
+          await textRecognizer.processImage(inputImage);
+      // y,x,text map, attempting to create a single line
+      var text = new Map<int, Map<int, String>>();
+      for (TextBlock block in recognizedText.blocks) {
+        for (TextLine line in block.lines) {
+          // normalize due to possible angling
+          var yval = (line.cornerPoints.first.y -
+                  tan((line.angle ?? 0).toDouble() * pi / 180) *
+                      line.cornerPoints.first.x)
+              .toInt();
+          var xval = line.cornerPoints.first.x;
+          if (!text.containsKey(yval)) {
+            text[yval] = {xval: line.text};
+          } else {
+            text[yval]!.addAll({xval: line.text});
+          }
+        }
+      }
+      // sort vertically
+      var res_text = Map.fromEntries(
+          text.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+      List<String> parse_dat = [];
+      for (var line in res_text.values) {
+        for (var vert in line.values) {
+          parse_dat.insertAll(parse_dat.length, vert.split(" "));
+        }
+      }
+      // remove non-important entries
+      var top = 0;
+      try {
+        top = extractOne(query: 'FISKALNY', choices: parse_dat, cutoff: 80)
+            .index; // Price data starts from this
+      } catch (e) {}
+      var bot = 0;
+      try {
+        var bot_sprzedaz =
+            extractOne(query: 'SPRZEDAZ', choices: parse_dat, cutoff: 80).index;
+        bot = bot_sprzedaz;
+      } catch (e) {}
+      // One of these hould be somewhere at the end of the list, but no earlier
+      try {
+        var bot_pln =
+            extractOne(query: 'PLN', choices: parse_dat, cutoff: 80).index;
+        var bot_suma =
+            extractOne(query: 'SUMA', choices: parse_dat, cutoff: 80).index;
+        // A quick check to verify we arent out of bounds
+        if (bot < top) {
+          if (bot_pln < bot_suma) {
+            bot = bot_pln;
+          } else {
+            bot = bot_suma;
+          }
+        }
+      } catch (e) {}
+
+      bot = parse_dat.length - bot;
+      if (bot > top) {
+        for (var i = 0; i < bot; i = i) {
+          if (res_text.values.last.isEmpty) {
+            res_text.remove(res_text.keys.last).toString();
+          } else {
+            i += res_text.values.last.values.last.split(" ").length;
+            res_text.values.last
+                .remove(res_text.values.last.keys.last)
+                .toString();
+          }
+        }
+      }
+      for (var i = 0; i < top; i = i) {
+        if (res_text.values.first.isEmpty) {
+          res_text.remove(res_text.keys.first);
+        } else {
+          i += res_text.values.first.values.first.split(" ").length;
+          res_text.values.first.remove(res_text.values.first.keys.first);
+        }
+      }
+      var grouper = DBSCAN(
+          epsilon: recognizedText
+              .blocks[(recognizedText.blocks.length / 2).round()]
+              .lines
+              .first
+              .elements
+              .first
+              .boundingBox
+              .height);
+      List<List<double>> g_list = [];
+      for (var k in res_text.keys) {
+        g_list.add([k.toDouble()]);
+      }
+      grouper.run(g_list);
+      var grouped_text = new Map<int, Map<int, String>>();
+      var targets = grouper.label ?? [];
+      for (var i = 0; i < (targets.length); i += 1) {
+        if (!grouped_text.containsKey(targets[i])) {
+          grouped_text[targets[i]] = res_text.values.elementAt(i);
+        } else {
+          grouped_text[targets[i]]!.addAll(res_text.values.elementAt(i));
+        }
+      }
+      String n_res = "";
+      for (var line in grouped_text.entries) {
+        // sort horizontally
+        var res_line = Map.fromEntries(line.value.entries.toList()
+          ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+        for (var element in res_line.entries) {
+          n_res += " " + element.value;
         }
       }
       var results;
       try {
-        results = extractText(n_res);
+        results = processText(n_res);
       } catch (e) {
         emitFailure(failureResponse: "Failed to process image!");
       }
-      
-      for (var result in results??[]) {
+
+      for (var result in results ?? []) {
         products.addFieldBloc(ProductFieldBloc(
             productName:
                 TextFieldBloc(name: 'productName', initialValue: result.$1),
             price: TextFieldBloc(name: 'price', initialValue: result.$2)));
       }
+      textRecognizer.close();
+      emitFailure(failureResponse: "Image scanned");
     }
   }
 
-  List<(String, String)> extractText(List<String> text) {
-    // Asuuming bounds
-    var top = extractOne(query: 'FISKALNY', choices: text, cutoff: 75)
-        .index; // Lower cutoff due to 'paragon niefiskalny'
-    var bot = extractOne(query: 'PLN', choices: text, cutoff: 80)
-        .index; // Should be at the end of the list
-    for (var i = bot; i > top + 1; i--) {
-      if (text[i].contains("x") || text[i].contains("*")) {
-        bot = i;
-        break; // finds lowest multiplication sign, seems to be the only consistent delimiter
-      }
+  List<(String, String)> processText(String text) {
+    // Regex breakdown:
+    // Attempt to match product name, weight/count data, text-like quantifiers, multiplier, result number
+    // \s? is for possible whitespaces
+    print(text);
+    var item_data = RegExp(
+            r"(?!\d)(?<name>[\w\s\d.]*?)(?<price>\d+[,\d]*[\d,]*\s?\w*\s?[x*]\s?[\d,\s]*)")
+        .allMatches(text);
+    List<(String, String)> results = [];
+    for (var item in item_data) {
+      results
+          .add((item.namedGroup('name') ?? '', item.namedGroup('price') ?? ''));
     }
-    List<(String, String)> re_val = [];
-    for (var i = top + 1; i <= bot; i++) {
-      // In case of any inconsistencies, probably just throw an error rn until we manage to error-catch it properly
-      var value = "v_test";
-      var name = "n_test";
-      if (i + 1 < text.length) {
-        // if there is a next record, check if it's text or possible price data
-        var letters = 0;
-        var numbers = 0;
-        for (var char in text[i + 1].characters) {
-          if (RegExp('[a-zA-Z]').hasMatch(char)) {
-            letters += 1;
-          } else if (RegExp('\\d').hasMatch(char)) {
-            numbers += 1;
-          }
-        }
-        if (numbers > letters) {
-          // if the next record has numbers, check where the multiplication sign is, and merge
-          // consume next line by advancing iterator
-          if (RegExp('[x*]').hasMatch(text[i + 1])) {
-            value = text[i + 1];
-            name = text[i];
-            i += 1;
-          } else if (RegExp('[x*]').hasMatch(text[i])) {
-            name = RegExp('.*\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-            value = RegExp('\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-            value += text[i + 1].replaceAll('\n', ' ');
-            i += 1;
-          }
-        } else if (RegExp('[x*]').hasMatch(text[i])) {
-          name = RegExp('.*\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-          value = RegExp('\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-        }
-      } else if (RegExp('[x*]').hasMatch(text[i])) {
-        // last record check on single line product lists
-        name = RegExp('.*\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-        value = RegExp('\d[\s\d]+[x*].*').firstMatch(text[i]) as String;
-      }
-      re_val.add((name, value));
-    }
-    return re_val;
+    return results;
   }
 
   void addProduct() {
