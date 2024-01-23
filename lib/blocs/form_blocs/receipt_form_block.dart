@@ -188,7 +188,7 @@ class ReceiptFormBloc extends FormBloc<String, String> {
     // \s? is for possible whitespaces
     print(text);
     var item_data = RegExp(
-            r"(?!\d)(?<name>[\w\s\d.]*?)(?<price>\d+[,\d]*[\d,]*\s?\w*\s?[x*]\s?[\d,\s]*)")
+            r"(?!\d)(?<name>[\w\s\d.]*?)(?<price_mult>\d+[,\d]*\s?\w*\s?[x*]\s?[\d,]*\s?[\s=]*)(?<price>\d*,\d*)")
         .allMatches(text);
     List<(String, String)> results = [];
     for (var item in item_data) {
