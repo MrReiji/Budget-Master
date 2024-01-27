@@ -1,16 +1,19 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
 class LineChartWidget extends StatefulWidget {
-  final bool isPlaying = false;
-  final List<Map<String, dynamic>> chartData;
-  LineChartWidget({Key? key, required this.chartData}) : super(key: key);
+  final List<Map<String, dynamic>> dataPoints;
+  LineChartWidget({Key? key, required this.dataPoints}) : super(key: key);
 
   @override
-  State<LineChartWidget> createState() => _LineChartWidgetState();
+  State<LineChartWidget> createState() => _LineChartWidgetState2();
 }
 
-class _LineChartWidgetState extends State<LineChartWidget> {
+class _LineChartWidgetState2 extends State<LineChartWidget> {
+  int displayedYear = DateTime.now().year; // Aktualny rok jako domyślny
+
   List<Color> gradientColors = [
     Colors.blue.shade300,
     Colors.blue.shade800,
@@ -20,6 +23,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     Colors.blue.shade800,
   ];
   bool showAvg = false;
+  void _incrementYear() {
+    setState(() {
+      displayedYear++;
+    });
+  }
+
+  void _decrementYear() {
+    setState(() {
+      displayedYear--;
+    });
+  }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -27,73 +41,128 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       fontSize: 16,
       color: Colors.blue,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 1:
-        text = const Text('JAN', style: style);
-        break;
-      case 3:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('MAY', style: style);
-        break;
-      case 7:
-        text = const Text('JUL', style: style);
-        break;
-      case 9:
-        text = const Text('SEP', style: style);
-        break;
-      case 11:
-        text = const Text('NOV', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
+    List<String> monthNames = [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC'
+    ];
+
+    int monthIndex = value.toInt();
+
+    // Sprawdzenie, czy miesiąc pasuje do naszego schematu (co trzy miesiące zaczynając od lutego)
+    if (monthIndex % 3 == 1) {
+      // 1 dla lutego, 4 dla maja, 7 dla sierpnia, 10 dla listopada
+      return SideTitleWidget(
+        axisSide: meta.axisSide,
+        child: Text(monthNames[monthIndex], style: style),
+      );
+    } else {
+      return SideTitleWidget(
+        axisSide: meta.axisSide,
+        child: Text(''),
+      );
+    }
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  Widget leftTitleWidgets(double value, TitleMeta meta, double maxY) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 15,
       color: Colors.blue,
     );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '1';
-        break;
-      case 3:
-        text = '3';
-        break;
-      case 5:
-        text = '5';
-        break;
-      case 7:
-        text = '7';
-        break;
-      case 9:
-        text = '9';
-        break;
-      default:
-        return Container();
+
+    int labelCount = 4; // Liczba etykiet do wyświetlenia
+    double interval =
+        maxY / labelCount; // Obliczenie interwału między etykietami
+
+    // Sprawdzenie, czy wartość jest bliska któremukolwiek z interwałów etykiet
+    for (int i = 1; i <= labelCount; i++) {
+      double labelValue = interval * i;
+      if ((value - labelValue).abs() < interval / 2) {
+        return Text('${value.toStringAsFixed(0)}', style: style);
+      }
     }
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return Text('');
   }
 
-  LineChartData mainLineData() {
+  Map<String, double> groupDataByDate(
+      List<Map<String, dynamic>> chartData, int displayedYear) {
+    Map<String, double> groupedData = {};
+
+    for (var dataPoint in chartData) {
+      if (!dataPoint.containsKey('purchaseDate') ||
+          !dataPoint.containsKey('totalPrice')) {
+        continue;
+      }
+
+      DateTime purchaseDate = DateTime.parse(dataPoint['purchaseDate']);
+      if (purchaseDate.year != displayedYear) {
+        continue; // Pomijamy dane, które nie są z wybranego roku
+      }
+
+      String formattedDate = DateFormat('yyyy-MM').format(purchaseDate);
+      double totalPrice = dataPoint['totalPrice'] ?? 0;
+
+      groupedData[formattedDate] =
+          (groupedData[formattedDate] ?? 0) + totalPrice;
+    }
+
+    // Sortowanie mapy według kluczy (miesiące)
+    var sortedKeys = groupedData.keys.toList(growable: false)..sort();
+    Map<String, double> sortedGroupedData = {
+      for (var key in sortedKeys) key: groupedData[key]!
+    };
+
+    return sortedGroupedData;
+  }
+
+  LineChartData mainLineData(List<Map<String, dynamic>> chartData) {
+    Map<String, double> groupedData = groupDataByDate(chartData, displayedYear);
+
+    List<FlSpot> getSpots(Map<String, double> groupedData) {
+      return groupedData.entries.map((entry) {
+        int month = int.parse(entry.key.split('-')[1]);
+        double xValue = (month - 1).toDouble(); // Miesiące zaczynają się od 0
+        return FlSpot(xValue, entry.value);
+      }).toList();
+    }
+
+    List<FlSpot> spots = getSpots(groupedData);
+
+    double minX = 0;
+    double maxX = 11; // 11?
+
+    // Determine the minimum and maximum values for Y
+    double minY = 0;
+    // double maxY = chartData.fold<double>(0,
+    //     (prev, data) => data['totalPrice'] > prev ? data['totalPrice'] : prev);
+    double maxY = 0;
+    if (groupedData.isNotEmpty) {
+      maxY = groupedData.values.reduce(max);
+    }
+
+    // Calculate the interval for Y axis titles
+    double intervalY = 5;
+    if (maxY != 0) {
+      intervalY = 1.2 * maxY / 10;
+    } // Divide maxY into 10 equal parts
+
     return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
-        horizontalInterval: 1,
+        horizontalInterval: intervalY,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
@@ -119,7 +188,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 40,
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
           ),
@@ -127,9 +196,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 35,
+            interval: intervalY,
+            getTitlesWidget: (value, meta) =>
+                leftTitleWidgets(value, meta, maxY),
+            reservedSize: 40,
           ),
         ),
       ),
@@ -139,26 +209,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           color: Color.fromARGB(255, 179, 231, 255),
         ),
       ),
-      minX: 0,
-      maxX: 12,
-      minY: 0,
-      maxY: 10,
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(1, 3),
-            FlSpot(2, 2),
-            FlSpot(3, 5),
-            FlSpot(4, 3.1),
-            FlSpot(5, 4),
-            FlSpot(6, 3),
-            FlSpot(7, 4),
-            FlSpot(8, 6),
-            FlSpot(9, 7),
-            FlSpot(10, 8),
-            FlSpot(11, 5),
-          ],
+          spots: spots,
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -183,111 +240,125 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     );
   }
 
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Colors.lightBlue,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: Colors.lightBlue,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 35,
-            interval: 1,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: Colors.lightBlue),
-      ),
-      minX: 0,
-      maxX: 12,
-      minY: 0,
-      maxY: 1,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 0.344),
-            FlSpot(2.6, 0.344),
-            FlSpot(4.9, 0.344),
-            FlSpot(6.8, 0.344),
-            FlSpot(8, 0.344),
-            FlSpot(9.5, 0.344),
-            FlSpot(11, 0.344),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors.map((color) => color).toList(),
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // LineChartData avgData() {
+  //   return LineChartData(
+  //     lineTouchData: const LineTouchData(enabled: false),
+  //     gridData: FlGridData(
+  //       show: true,
+  //       drawHorizontalLine: true,
+  //       verticalInterval: 1,
+  //       horizontalInterval: 1,
+  //       getDrawingVerticalLine: (value) {
+  //         return const FlLine(
+  //           color: Colors.lightBlue,
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //       getDrawingHorizontalLine: (value) {
+  //         return const FlLine(
+  //           color: Colors.lightBlue,
+  //           strokeWidth: 1,
+  //         );
+  //       },
+  //     ),
+  //     titlesData: FlTitlesData(
+  //       show: true,
+  //       bottomTitles: AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: true,
+  //           reservedSize: 30,
+  //           getTitlesWidget: bottomTitleWidgets,
+  //           interval: 1,
+  //         ),
+  //       ),
+  //       leftTitles: AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: true,
+  //           getTitlesWidget: leftTitleWidgets,
+  //           reservedSize: 35,
+  //           interval: 1,
+  //         ),
+  //       ),
+  //       topTitles: const AxisTitles(
+  //         sideTitles: SideTitles(showTitles: false),
+  //       ),
+  //       rightTitles: const AxisTitles(
+  //         sideTitles: SideTitles(showTitles: false),
+  //       ),
+  //     ),
+  //     borderData: FlBorderData(
+  //       show: true,
+  //       border: Border.all(color: Colors.lightBlue),
+  //     ),
+  //     minX: 0,
+  //     maxX: 12,
+  //     minY: 0,
+  //     maxY: 1,
+  //     lineBarsData: [
+  //       LineChartBarData(
+  //         spots: const [
+  //           FlSpot(0, 0.344),
+  //           FlSpot(2.6, 0.344),
+  //           FlSpot(4.9, 0.344),
+  //           FlSpot(6.8, 0.344),
+  //           FlSpot(8, 0.344),
+  //           FlSpot(9.5, 0.344),
+  //           FlSpot(11, 0.344),
+  //         ],
+  //         isCurved: true,
+  //         gradient: LinearGradient(
+  //           colors: gradientColors.map((color) => color).toList(),
+  //         ),
+  //         barWidth: 5,
+  //         isStrokeCapRound: true,
+  //         dotData: const FlDotData(
+  //           show: false,
+  //         ),
+  //         belowBarData: BarAreaData(
+  //           show: true,
+  //           gradient: LinearGradient(
+  //             colors: gradientColors
+  //                 .map((color) => color.withOpacity(0.3))
+  //                 .toList(),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TextButton(
-          onPressed: () {
-            setState(() {
-              showAvg = !showAvg;
-            });
-          },
-          child: Text(
-            'avg',
-            style: TextStyle(
-              fontSize: 12,
-              color: showAvg ? Colors.orange : Colors.red,
+        Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  showAvg = !showAvg;
+                });
+              },
+              child: Text(
+                'avg',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: showAvg ? Colors.orange : Colors.red,
+                ),
+              ),
             ),
-          ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.arrow_left),
+              onPressed: _decrementYear,
+            ),
+            Text('$displayedYear'),
+            IconButton(
+              icon: Icon(Icons.arrow_right),
+              onPressed: _incrementYear,
+            ),
+          ],
         ),
         AspectRatio(
           aspectRatio: 1.2,
@@ -297,7 +368,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               vertical: 1.0,
             ),
             child: LineChart(
-              showAvg ? avgData() : mainLineData(),
+              // showAvg ? avgData() : mainLineData(widget.dataPoints),
+              mainLineData(widget.dataPoints),
             ),
           ),
         ),

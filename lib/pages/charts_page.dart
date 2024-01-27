@@ -10,15 +10,8 @@ class ChartsPage extends StatelessWidget {
 
   final Duration animDuration = const Duration(milliseconds: 250);
 
-  // int touchedIndex = -1;
-
   final bool isPlaying = false;
 
-  // Color touchedBarColor = Colors.blue.shade800;
-
-  // Color barBackgroundColor = Constants.primaryColor;
-
-  // ChartType selectedChartType = ChartType.bar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,8 +102,13 @@ class ChartsPage extends StatelessWidget {
                                 // Extract the purchaseDate and totalPriceString from each document in the snapshot.
                                 final purchaseDate =
                                     doc.data()['purchaseDate'] as String;
-                                final totalPriceString =
-                                    doc.data()['totalPrice'] as String;
+                                var totalPriceString = '0';
+                                if (doc.data()['totalPrice'] != null) {
+                                  totalPriceString =
+                                      doc.data()['totalPrice'] as String;
+                                } else
+                                  totalPriceString =
+                                      doc.data()['totalPrice'] = '0';
 
                                 final totalPrice =
                                     double.tryParse(totalPriceString) ?? 0;
@@ -150,7 +148,7 @@ class ChartsPage extends StatelessWidget {
                                       height: 10.0,
                                     ),
                                     LineChartWidget(
-                                      chartData: chartData,
+                                      dataPoints: chartData,
                                     ),
                                     SizedBox(
                                       height: 50.0,
