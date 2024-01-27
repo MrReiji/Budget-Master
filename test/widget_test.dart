@@ -1,7 +1,12 @@
+import 'package:budget_master/pages/home_page.dart';
 import 'package:budget_master/screens/auth/auth_screen.dart';
 import 'package:budget_master/screens/auth/login_screen.dart';
 import 'package:budget_master/screens/auth/signup_screen.dart';
+import 'package:budget_master/screens/home_screen.dart';
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
 import 'package:budget_master/utils/navigation/router.dart';
+import 'package:budget_master/widgets/dialogs/loading_dialog.dart';
+import 'package:budget_master/widgets/forms/reset_password_form.dart';
 import 'package:budget_master/widgets/ui_elements/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -77,5 +82,40 @@ void main() {
       expect(fixRoute.path, isNotNull);
       expect(fixRoute.builder, isNotNull);
     }
+  });
+
+  testWidgets('Verifying additional login screen data',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MyTestApp(initialLocation: AppRouterPaths.login));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is AppButton && RegExp("[Ll]og.*[Ii]n").hasMatch(widget.text)));
+    expect(find.byType(LoginScreen), findsOne);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is Text &&
+        RegExp("[Ff]orgot.*[Pp]assword.*").hasMatch(widget.data ?? "")));
+    await tester.pumpAndSettle();
+    expect(find.byType(ResetPasswordForm), findsOne);
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is AppButton &&
+        RegExp("[Rr]eset.*[Pp]assword.*").hasMatch(widget.text)));
+    expect(find.byType(ResetPasswordForm), findsOne);
+  });
+
+  testWidgets('Verifying additional singup screen data',
+      (WidgetTester tester) async {
+    WidgetController.hitTestWarningShouldBeFatal = true;
+    tester.view.physicalSize = const Size(1080, 2220);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(MyTestApp(
+      initialLocation: AppRouterPaths.signUp,
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byType(SignUpScreen), findsOne);
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is AppButton &&
+        RegExp("[Ss]ign.*[Uu]p.*").hasMatch(widget.text)));
   });
 }
