@@ -268,16 +268,16 @@ class AddReceiptPage extends StatelessWidget {
                                         children: [
                                           ElevatedButton(
                                             onPressed: () {
-                                            receiptFormBloc.loadAndProcessImage(
-                                                ImageSource.gallery);
-                                          },
+                                              receiptFormBloc.loadAndProcessImage(
+                                                  ImageSource.gallery);
+                                            },
                                             child: Text('From gallery'),
                                           ),
                                           ElevatedButton(
                                             onPressed: () {
-                                            receiptFormBloc.loadAndProcessImage(
-                                                ImageSource.camera);
-                                          },
+                                              receiptFormBloc.loadAndProcessImage(
+                                                  ImageSource.camera);
+                                            },
                                             child: Text('Using camera'),
                                           ),
                                         ],

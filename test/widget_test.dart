@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:budget_master/models/product.dart';
 import 'package:budget_master/pages/home_page.dart';
 import 'package:budget_master/screens/auth/auth_screen.dart';
 import 'package:budget_master/screens/auth/login_screen.dart';
@@ -5,6 +8,7 @@ import 'package:budget_master/screens/auth/signup_screen.dart';
 import 'package:budget_master/screens/home_screen.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
 import 'package:budget_master/utils/navigation/router.dart';
+import 'package:budget_master/utils/ocr/processImage.dart';
 import 'package:budget_master/widgets/dialogs/loading_dialog.dart';
 import 'package:budget_master/widgets/forms/reset_password_form.dart';
 import 'package:budget_master/widgets/ui_elements/app_button.dart';
@@ -117,5 +121,25 @@ void main() {
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is AppButton &&
         RegExp("[Ss]ign.*[Uu]p.*").hasMatch(widget.text)));
+  });
+
+  testWidgets('product model testing', (WidgetTester tester) async {
+    Product test = new Product(productName: "testname", price: "735799123");
+    expect(test.toString(),
+        "Product {\n  productName: testname,\n  price: 735799123\n}");
+    expect(test.toJson(),
+        <String, dynamic>{'productName': "testname", "price": "735799123"});
+  });
+
+  testWidgets('text processing testing', (WidgetTester tester) async {
+    // we cannot rn get images into the app, so this is only a partial test
+    expect(processText(""), []);
+    expect(
+        processText(
+            "JogSkyrPitn2509 Rabat D 3 x2,94 8,820 -1,65 7,170 Pizza salani 130g D 2 x3,99 7,980"),
+        [
+          ("JogSkyrPitn2509 Rabat D ", "8,820"),
+          (" Pizza salani 130g D ", "7,980")
+        ]);
   });
 }
