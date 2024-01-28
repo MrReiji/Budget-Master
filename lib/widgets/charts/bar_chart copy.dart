@@ -31,6 +31,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     bool isTouched = false,
     Color? barColor,
     double width = 22,
+    double maxY = 20,
     List<int> showTooltips = const [],
   }) {
     barColor ??= Colors.blue;
@@ -51,7 +52,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
               : const BorderSide(color: Colors.grey, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
-            toY: 20,
+            toY: maxY,
             color: barBackgroundColor,
           ),
         ),
@@ -60,26 +61,47 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(0, 5, isTouched: i == touchedIndex);
-          case 1:
-            return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
-          case 2:
-            return makeGroupData(2, 5, isTouched: i == touchedIndex);
-          case 3:
-            return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
-          case 4:
-            return makeGroupData(4, 9, isTouched: i == touchedIndex);
-          case 5:
-            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
-          case 6:
-            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
-          default:
-            return throw Error();
-        }
-      });
+  Map<int, double> groupDataByDayOfWeek(List<Map<String, dynamic>> chartData) {
+    Map<int, double> groupedData = {};
+
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+
+    for (var dataPoint in chartData) {
+      if (!dataPoint.containsKey('purchaseDate') ||
+          !dataPoint.containsKey('totalPrice')) {
+        continue;
+      }
+
+      DateTime purchaseDate = DateTime.parse(dataPoint['purchaseDate']);
+      if (purchaseDate.isBefore(startOfWeek) || purchaseDate.isAfter(now)) {
+        continue; // Pomijamy dane spoza bieżącego tygodnia
+      }
+
+      int dayOfWeek = purchaseDate.weekday;
+      double totalPrice = dataPoint['totalPrice'] ?? 0;
+
+      groupedData[dayOfWeek] = (groupedData[dayOfWeek] ?? 0) + totalPrice;
+    }
+
+    return groupedData;
+  }
+
+  List<BarChartGroupData> showingGroups() {
+    Map<int, double> groupedData = groupDataByDayOfWeek(widget.chartData);
+    double maxYValue = findMaxValue(groupedData);
+
+    return List.generate(7, (i) {
+      double rawYValue = groupedData[i + 1] ?? 0;
+      return makeGroupData(i, rawYValue,
+          isTouched: i == touchedIndex, maxY: maxYValue);
+    });
+  }
+
+  double findMaxValue(Map<int, double> groupedData) {
+    if (groupedData.isEmpty) return 0;
+    return groupedData.values.reduce(max);
+  }
 
   BarChartData mainBarData() {
     return BarChartData(
@@ -216,83 +238,83 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     );
   }
 
-  BarChartData randomData() {
-    return BarChartData(
-      barTouchData: BarTouchData(
-        enabled: false,
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: getTitles,
-            reservedSize: 50,
-          ),
-        ),
-        leftTitles: const AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: false,
-      ),
-      barGroups: List.generate(7, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(
-              0,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 1:
-            return makeGroupData(
-              1,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 2:
-            return makeGroupData(
-              2,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 3:
-            return makeGroupData(
-              3,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 4:
-            return makeGroupData(
-              4,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 5:
-            return makeGroupData(
-              5,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          case 6:
-            return makeGroupData(
-              6,
-              Random().nextInt(15).toDouble() + 6,
-            );
-          default:
-            return throw Error();
-        }
-      }),
-      gridData: const FlGridData(show: false),
-    );
-  }
+  // BarChartData randomData() {
+  //   return BarChartData(
+  //     barTouchData: BarTouchData(
+  //       enabled: false,
+  //     ),
+  //     titlesData: FlTitlesData(
+  //       show: true,
+  //       bottomTitles: AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: true,
+  //           getTitlesWidget: getTitles,
+  //           reservedSize: 50,
+  //         ),
+  //       ),
+  //       leftTitles: const AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: false,
+  //         ),
+  //       ),
+  //       topTitles: const AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: false,
+  //         ),
+  //       ),
+  //       rightTitles: const AxisTitles(
+  //         sideTitles: SideTitles(
+  //           showTitles: false,
+  //         ),
+  //       ),
+  //     ),
+  //     borderData: FlBorderData(
+  //       show: false,
+  //     ),
+  //     barGroups: List.generate(7, (i) {
+  //       switch (i) {
+  //         case 0:
+  //           return makeGroupData(
+  //             0,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 1:
+  //           return makeGroupData(
+  //             1,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 2:
+  //           return makeGroupData(
+  //             2,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 3:
+  //           return makeGroupData(
+  //             3,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 4:
+  //           return makeGroupData(
+  //             4,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 5:
+  //           return makeGroupData(
+  //             5,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         case 6:
+  //           return makeGroupData(
+  //             6,
+  //             Random().nextInt(15).toDouble() + 6,
+  //           );
+  //         default:
+  //           return throw Error();
+  //       }
+  //     }),
+  //     gridData: const FlGridData(show: false),
+  //   );
+  // }
 
   Future<dynamic> refreshState() async {
     setState(() {});
@@ -308,7 +330,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   Widget build(BuildContext context) {
     return Container(
       child: BarChart(
-        widget.isPlaying ? randomData() : mainBarData(),
+        // widget.isPlaying ? randomData() : mainBarData(),
+        mainBarData(),
         swapAnimationDuration: animDuration,
       ),
     );
