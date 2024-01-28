@@ -8,10 +8,10 @@ class LineChartWidget extends StatefulWidget {
   LineChartWidget({Key? key, required this.dataPoints}) : super(key: key);
 
   @override
-  State<LineChartWidget> createState() => _LineChartWidgetState2();
+  State<LineChartWidget> createState() => _LineChartWidgetState();
 }
 
-class _LineChartWidgetState2 extends State<LineChartWidget> {
+class _LineChartWidgetState extends State<LineChartWidget> {
   int displayedYear = DateTime.now().year; // Aktualny rok jako domyślny
 
   List<Color> gradientColors = [
@@ -81,16 +81,14 @@ class _LineChartWidgetState2 extends State<LineChartWidget> {
       color: Colors.blue,
     );
 
-    int labelCount = 4; // Liczba etykiet do wyświetlenia
-    double interval =
-        maxY / labelCount; // Obliczenie interwału między etykietami
+    // nie wyświetlaj etykiety, jeśli wartość to 0
+    if (value == 0) {
+      return Text('');
+    }
 
-    // Sprawdzenie, czy wartość jest bliska któremukolwiek z interwałów etykiet
-    for (int i = 1; i <= labelCount; i++) {
-      double labelValue = interval * i;
-      if ((value - labelValue).abs() < interval / 2) {
-        return Text('${value.toStringAsFixed(0)}', style: style);
-      }
+    // tylko etykiety dla określonych interwałów
+    if (value % (maxY / 5) == 0) {
+      return Text('${value.toInt()}', style: style);
     }
 
     return Text('');
@@ -141,22 +139,19 @@ class _LineChartWidgetState2 extends State<LineChartWidget> {
     List<FlSpot> spots = getSpots(groupedData);
 
     double minX = 0;
-    double maxX = 11; // 11?
-
-    // Determine the minimum and maximum values for Y
+    double maxX = 11;
     double minY = 0;
-    // double maxY = chartData.fold<double>(0,
-    //     (prev, data) => data['totalPrice'] > prev ? data['totalPrice'] : prev);
     double maxY = 0;
+
     if (groupedData.isNotEmpty) {
       maxY = groupedData.values.reduce(max);
+      maxY = (maxY / 50).ceil() * 50; // Zaokrąglanie
     }
 
-    // Calculate the interval for Y axis titles
     double intervalY = 5;
     if (maxY != 0) {
-      intervalY = 1.2 * maxY / 10;
-    } // Divide maxY into 10 equal parts
+      intervalY = maxY / 10;
+    } // interwały dla poziomych linii oraz wartości osi y
 
     return LineChartData(
       gridData: FlGridData(
@@ -196,7 +191,7 @@ class _LineChartWidgetState2 extends State<LineChartWidget> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: intervalY,
+            interval: 1,
             getTitlesWidget: (value, meta) =>
                 leftTitleWidgets(value, meta, maxY),
             reservedSize: 40,

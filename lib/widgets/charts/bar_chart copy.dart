@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
 class BarChartWidget extends StatefulWidget {
   final List<Map<String, dynamic>> chartData;
@@ -15,6 +16,11 @@ class BarChartWidget extends StatefulWidget {
 }
 
 class _BarChartWidgetState extends State<BarChartWidget> {
+  DateTime startDate =
+      DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+  DateTime endDate = DateTime.now()
+      .add(Duration(days: DateTime.daysPerWeek - DateTime.now().weekday));
+
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex = -1;
   Color touchedBarColor = Colors.blue.shade800;
@@ -24,6 +30,20 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     Colors.blue.shade200,
     Colors.blue.shade600,
   ];
+
+  // void _incrementWeek() {
+  //   setState(() {
+  //     startDate = startDate.add(Duration(days: 7));
+  //     endDate = endDate.add(Duration(days: 7));
+  //   });
+  // }
+
+  // void _decrementWeek() {
+  //   setState(() {
+  //     startDate = startDate.subtract(Duration(days: 7));
+  //     endDate = endDate.subtract(Duration(days: 7));
+  //   });
+  // }
 
   BarChartGroupData makeGroupData(
     int x,
@@ -64,9 +84,6 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   Map<int, double> groupDataByDayOfWeek(List<Map<String, dynamic>> chartData) {
     Map<int, double> groupedData = {};
 
-    DateTime now = DateTime.now();
-    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-
     for (var dataPoint in chartData) {
       if (!dataPoint.containsKey('purchaseDate') ||
           !dataPoint.containsKey('totalPrice')) {
@@ -74,7 +91,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       }
 
       DateTime purchaseDate = DateTime.parse(dataPoint['purchaseDate']);
-      if (purchaseDate.isBefore(startOfWeek) || purchaseDate.isAfter(now)) {
+      if (purchaseDate.isBefore(startDate) || purchaseDate.isAfter(endDate)) {
         continue; // Pomijamy dane spoza bieżącego tygodnia
       }
 
@@ -238,84 +255,6 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     );
   }
 
-  // BarChartData randomData() {
-  //   return BarChartData(
-  //     barTouchData: BarTouchData(
-  //       enabled: false,
-  //     ),
-  //     titlesData: FlTitlesData(
-  //       show: true,
-  //       bottomTitles: AxisTitles(
-  //         sideTitles: SideTitles(
-  //           showTitles: true,
-  //           getTitlesWidget: getTitles,
-  //           reservedSize: 50,
-  //         ),
-  //       ),
-  //       leftTitles: const AxisTitles(
-  //         sideTitles: SideTitles(
-  //           showTitles: false,
-  //         ),
-  //       ),
-  //       topTitles: const AxisTitles(
-  //         sideTitles: SideTitles(
-  //           showTitles: false,
-  //         ),
-  //       ),
-  //       rightTitles: const AxisTitles(
-  //         sideTitles: SideTitles(
-  //           showTitles: false,
-  //         ),
-  //       ),
-  //     ),
-  //     borderData: FlBorderData(
-  //       show: false,
-  //     ),
-  //     barGroups: List.generate(7, (i) {
-  //       switch (i) {
-  //         case 0:
-  //           return makeGroupData(
-  //             0,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 1:
-  //           return makeGroupData(
-  //             1,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 2:
-  //           return makeGroupData(
-  //             2,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 3:
-  //           return makeGroupData(
-  //             3,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 4:
-  //           return makeGroupData(
-  //             4,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 5:
-  //           return makeGroupData(
-  //             5,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         case 6:
-  //           return makeGroupData(
-  //             6,
-  //             Random().nextInt(15).toDouble() + 6,
-  //           );
-  //         default:
-  //           return throw Error();
-  //       }
-  //     }),
-  //     gridData: const FlGridData(show: false),
-  //   );
-  // }
-
   Future<dynamic> refreshState() async {
     setState(() {});
     await Future<dynamic>.delayed(
@@ -328,12 +267,37 @@ class _BarChartWidgetState extends State<BarChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: BarChart(
-        // widget.isPlaying ? randomData() : mainBarData(),
-        mainBarData(),
-        swapAnimationDuration: animDuration,
-      ),
+    return Column(
+      children: [
+        // Row(
+        //   children: [
+        //     IconButton(
+        //       icon: Icon(Icons.arrow_left),
+        //       onPressed: _decrementWeek,
+        //     ),
+        //     Text(DateFormat('yyyy-MM-dd').format(startDate) +
+        //         ' - ' +
+        //         DateFormat('yyyy-MM-dd').format(endDate)),
+        //     IconButton(
+        //       icon: Icon(Icons.arrow_right),
+        //       onPressed: _incrementWeek,
+        //     ),
+        //   ],
+        // ),             // przyciski do zmiany tygodnia - na testy
+        AspectRatio(
+          aspectRatio: 1.2,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 1.0,
+              vertical: 1.0,
+            ),
+            child: BarChart(
+              mainBarData(),
+              swapAnimationDuration: animDuration,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

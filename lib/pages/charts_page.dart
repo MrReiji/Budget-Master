@@ -164,11 +164,9 @@ class ChartsPage extends StatelessWidget {
                                     SizedBox(
                                       height: 25.0,
                                     ),
-                                    Container(
-                                        height: 300,
-                                        child: BarChartWidget(
-                                            chartData: chartData,
-                                            isPlaying: isPlaying)),
+                                    BarChartWidget(
+                                        chartData: chartData,
+                                        isPlaying: isPlaying),
                                   ],
                                 ),
                               );
@@ -180,9 +178,9 @@ class ChartsPage extends StatelessWidget {
                               ),
                             );
                           }),
-                      // SizedBox(
-                      //   height: 100.0,
-                      // ),
+                      SizedBox(
+                        height: 50.0,
+                      ),
                     ],
                   ),
                 ),
