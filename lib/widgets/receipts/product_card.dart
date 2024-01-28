@@ -21,8 +21,9 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Flexible(
+          Expanded(
             flex: 2,
             child: Container(
               child: InputWidget(
@@ -33,7 +34,7 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: 5.0),
-          Flexible(
+          Expanded(
             flex: 1,
             child: Container(
               child: InputWidget(
@@ -45,10 +46,18 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           Container(
-            child: IconButton(
-              alignment: Alignment.center,
-              icon: const Icon(Icons.delete),
-              onPressed: onRemoveProduct,
+            child: Column(
+              children: [
+                SizedBox(height: 10.0),
+                Container(
+                  height: 60,
+                  child: IconButton(
+                    alignment: Alignment.center,
+                    icon: const Icon(Icons.delete),
+                    onPressed: onRemoveProduct,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

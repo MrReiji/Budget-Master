@@ -407,14 +407,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.0"
-  flutter_tesseract_ocr:
-    dependency: "direct main"
-    description:
-      name: flutter_tesseract_ocr
-      sha256: "4a8d0e3f562ee01d94a464ff9d31d9e907b1e374aeff29bf696f979417c70bcf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.24"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -434,6 +426,14 @@ packages:
       url: "https://github.com/Cavin6080/form_bloc.git"
     source: git
     version: "0.31.0"
+  fuzzywuzzy:
+    dependency: "direct main"
+    description:
+      name: fuzzywuzzy
+      sha256: a84b99ebb21c448e02267070c91b218b4fbbef9c668b344aaeada49865985cae
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.6"
   go_router:
     dependency: "direct main"
     description:
@@ -450,6 +450,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
+  google_mlkit_commons:
+    dependency: transitive
+    description:
+      name: google_mlkit_commons
+      sha256: "046586b381cdd139f7f6a05ad6998f7e339d061bd70158249907358394b5f496"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1"
+  google_mlkit_text_recognition:
+    dependency: "direct main"
+    description:
+      name: google_mlkit_text_recognition
+      sha256: d484de2a10961a6f0ff8b54cc92b71bfbb0e65509be0903edca0e1f9256ca4c2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   http:
     dependency: transitive
     description:
@@ -478,10 +494,10 @@ packages:
     dependency: "direct main"
     description:
       name: image_picker
-      sha256: fc712337719239b0b6e41316aa133350b078fa39b6cbd706b61f3fd421b03c77
+      sha256: "26222b01a0c9a2c8fe02fc90b8208bd3325da5ed1f4a2acabf75939031ac0bdd"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.7"
   image_picker_android:
     dependency: transitive
     description:
@@ -538,6 +554,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
+  internet_connection_checker:
+    dependency: "direct main"
+    description:
+      name: internet_connection_checker
+      sha256: "1c683e63e89c9ac66a40748b1b20889fd9804980da732bf2b58d6d5456c8e876"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+1"
   intl:
     dependency: transitive
     description:
@@ -730,6 +754,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  simple_cluster:
+    dependency: "direct main"
+    description:
+      name: simple_cluster
+      sha256: "64d6b7d60d641299ad8c3f012417c711532792c1bc61ac6a7f52b942cdba65da"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   sky_engine:
     dependency: transitive
     description: flutter

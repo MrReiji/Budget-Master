@@ -1,9 +1,11 @@
-import 'package:budget_master/utils/validators/maxLengthValidator.dart';
+import 'package:budget_master/utils/ocr/processImage.dart';
 import 'package:budget_master/utils/validators/priceValidator.dart';
+import 'package:budget_master/utils/validators/maxLengthValidator.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:budget_master/models/product.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class ReceiptFormBloc extends FormBloc<String, String> {
   final String creatorID = FirebaseAuth.instance.currentUser!.uid;
@@ -42,13 +44,30 @@ class ReceiptFormBloc extends FormBloc<String, String> {
     );
   }
 
+  void loadAndProcessImage(source) async {
+    List<(String, String)> results =[];
+    try {
+      results = await ProcessImage(source);
+    } catch (e) {
+      emitFailure(failureResponse: "Failed to process image!");
+    }
+
+    for (var result in results) {
+      products.addFieldBloc(ProductFieldBloc(
+          productName:
+              TextFieldBloc(name: 'productName', initialValue: result.$1),
+          price: TextFieldBloc(name: 'price', initialValue: result.$2)));
+    }
+    emitFailure(failureResponse: "Image scanned");
+  }
+
   void addProduct() {
     products.addFieldBloc(ProductFieldBloc(
       productName: TextFieldBloc(
         name: 'productName',
         validators: [
           FieldBlocValidators.required,
-          maxLengthValidator(30),
+          maxLengthValidator(50),
         ],
       ),
       price: TextFieldBloc(
@@ -68,6 +87,12 @@ class ReceiptFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() async {
     try {
+      final isInternetAvailable =
+          await InternetConnectionChecker().hasConnection;
+      if (isInternetAvailable == false) {
+        emitFailure(failureResponse: "No internet connection!");
+        return;
+      }
       if (products.value.isEmpty) {
         throw NoProductsException('Please add at least one product.');
       }
@@ -121,7 +146,7 @@ class ProductFieldBloc extends GroupFieldBloc {
   }) : super(fieldBlocs: [productName, price]) {
     productName.addValidators([
       FieldBlocValidators.required,
-      maxLengthValidator(30),
+      maxLengthValidator(50),
     ]);
     price.addValidators([
       FieldBlocValidators.required,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -34,6 +35,12 @@ class LoginFormBloc extends FormBloc<String, String> {
     debugPrint(password.value);
 
     try {
+      final isInternetAvailable =
+          await InternetConnectionChecker().hasConnection;
+      if (isInternetAvailable == false) {
+        emitFailure(failureResponse: "No internet connection!");
+        return;
+      }
       final userCredentials = await _firebase.signInWithEmailAndPassword(
           email: email.value, password: password.value);
       debugPrint(userCredentials.toString());
