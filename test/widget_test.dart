@@ -81,7 +81,7 @@ void main() {
 
   testWidgets('Router paths test', (WidgetTester tester) async {
     for (var route in AppRouter.router.configuration.routes) {
-      var fixRoute = route as GoRoute; // I hate how this works here
+      var fixRoute = route as GoRoute;
       expect(fixRoute.name, isNotNull);
       expect(fixRoute.path, isNotNull);
       expect(fixRoute.builder, isNotNull);
