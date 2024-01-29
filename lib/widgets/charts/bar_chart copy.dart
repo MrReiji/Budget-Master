@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
 class BarChartWidget extends StatefulWidget {
@@ -17,7 +18,7 @@ class BarChartWidget extends StatefulWidget {
 
 class _BarChartWidgetState extends State<BarChartWidget> {
   DateTime startDate =
-      DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+      DateTime.now().subtract(Duration(days: DateTime.now().weekday - 0));
   DateTime endDate = DateTime.now()
       .add(Duration(days: DateTime.daysPerWeek - DateTime.now().weekday));
 
@@ -31,19 +32,19 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     Colors.blue.shade600,
   ];
 
-  // void _incrementWeek() {
-  //   setState(() {
-  //     startDate = startDate.add(Duration(days: 7));
-  //     endDate = endDate.add(Duration(days: 7));
-  //   });
-  // }
+  void _incrementWeek() {
+    setState(() {
+      startDate = startDate.add(Duration(days: 7));
+      endDate = endDate.add(Duration(days: 7));
+    });
+  }
 
-  // void _decrementWeek() {
-  //   setState(() {
-  //     startDate = startDate.subtract(Duration(days: 7));
-  //     endDate = endDate.subtract(Duration(days: 7));
-  //   });
-  // }
+  void _decrementWeek() {
+    setState(() {
+      startDate = startDate.subtract(Duration(days: 7));
+      endDate = endDate.subtract(Duration(days: 7));
+    });
+  }
 
   BarChartGroupData makeGroupData(
     int x,
@@ -269,21 +270,21 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Row(
-        //   children: [
-        //     IconButton(
-        //       icon: Icon(Icons.arrow_left),
-        //       onPressed: _decrementWeek,
-        //     ),
-        //     Text(DateFormat('yyyy-MM-dd').format(startDate) +
-        //         ' - ' +
-        //         DateFormat('yyyy-MM-dd').format(endDate)),
-        //     IconButton(
-        //       icon: Icon(Icons.arrow_right),
-        //       onPressed: _incrementWeek,
-        //     ),
-        //   ],
-        // ),             // przyciski do zmiany tygodnia - na testy
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_left),
+              onPressed: _decrementWeek,
+            ),
+            Text(DateFormat('yyyy-MM-dd').format(startDate) +
+                ' - ' +
+                DateFormat('yyyy-MM-dd').format(endDate)),
+            IconButton(
+              icon: Icon(Icons.arrow_right),
+              onPressed: _incrementWeek,
+            ),
+          ],
+        ), // przyciski do zmiany tygodnia - na testy
         AspectRatio(
           aspectRatio: 1.2,
           child: Padding(
