@@ -1,10 +1,7 @@
 import 'dart:math';
-import 'dart:async';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
 class BarChartWidget extends StatefulWidget {
   final List<Map<String, dynamic>> chartData;
@@ -17,10 +14,8 @@ class BarChartWidget extends StatefulWidget {
 }
 
 class _BarChartWidgetState extends State<BarChartWidget> {
-  DateTime startDate =
-      DateTime.now().subtract(Duration(days: DateTime.now().weekday - 0));
-  DateTime endDate = DateTime.now()
-      .add(Duration(days: DateTime.daysPerWeek - DateTime.now().weekday));
+  late DateTime startDate;
+  late DateTime endDate;
 
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex = -1;
@@ -31,6 +26,18 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     Colors.blue.shade200,
     Colors.blue.shade600,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _setWeekDates();
+  }
+
+  void _setWeekDates() {
+    DateTime now = DateTime.now();
+    startDate = DateTime(now.year, now.month, now.day - now.weekday + 1);
+    endDate = startDate.add(Duration(days: 6));
+  }
 
   void _incrementWeek() {
     setState(() {
@@ -93,7 +100,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
 
       DateTime purchaseDate = DateTime.parse(dataPoint['purchaseDate']);
       if (purchaseDate.isBefore(startDate) || purchaseDate.isAfter(endDate)) {
-        continue; // Pomijamy dane spoza bieżącego tygodnia
+        continue; // Ignoring data outside the current week
       }
 
       int dayOfWeek = purchaseDate.weekday;
@@ -284,7 +291,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
               onPressed: _incrementWeek,
             ),
           ],
-        ), // przyciski do zmiany tygodnia - na testy
+        ),
         AspectRatio(
           aspectRatio: 1.2,
           child: Padding(
