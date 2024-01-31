@@ -1,11 +1,14 @@
-import 'package:budget_master/utils/ocr/processImage.dart';
-import 'package:budget_master/utils/validators/priceValidator.dart';
-import 'package:budget_master/utils/validators/maxLengthValidator.dart';
-import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:budget_master/models/product.dart';
+
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+import 'package:budget_master/blocs/group_field_blocs/product_field_bloc.dart';
+import 'package:budget_master/models/product.dart';
+import 'package:budget_master/utils/ocr/processImage.dart';
+import 'package:budget_master/utils/validators/maxLengthValidator.dart';
+import 'package:budget_master/utils/validators/priceValidator.dart';
 
 class ReceiptFormBloc extends FormBloc<String, String> {
   final String creatorID = FirebaseAuth.instance.currentUser!.uid;
@@ -45,7 +48,7 @@ class ReceiptFormBloc extends FormBloc<String, String> {
   }
 
   void loadAndProcessImage(source) async {
-    List<(String, String)> results =[];
+    List<(String, String)> results = [];
     try {
       results = await ProcessImage(source);
     } catch (e) {
@@ -132,26 +135,6 @@ class ReceiptFormBloc extends FormBloc<String, String> {
         emitFailure(failureResponse: 'Failed to add expense.');
       }
     }
-  }
-}
-
-class ProductFieldBloc extends GroupFieldBloc {
-  final TextFieldBloc productName;
-  final TextFieldBloc price;
-
-  ProductFieldBloc({
-    required this.productName,
-    required this.price,
-    super.name,
-  }) : super(fieldBlocs: [productName, price]) {
-    productName.addValidators([
-      FieldBlocValidators.required,
-      maxLengthValidator(50),
-    ]);
-    price.addValidators([
-      FieldBlocValidators.required,
-      priceValidator,
-    ]);
   }
 }
 
