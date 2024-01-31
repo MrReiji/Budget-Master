@@ -1,7 +1,9 @@
-import 'package:budget_master/models/receipt.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/models/receipt.dart';
 
 class ReceiptScreen extends StatelessWidget {
   const ReceiptScreen({required this.receipt, Key? key}) : super(key: key);
@@ -26,7 +28,7 @@ class ReceiptScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
+                        context.pop(context);
                       },
                       child: Icon(
                         Icons.keyboard_backspace_rounded,

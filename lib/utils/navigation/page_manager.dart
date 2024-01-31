@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:budget_master/pages/add_receipt_page.dart';
 import 'package:budget_master/pages/charts_page.dart';
 import 'package:budget_master/pages/home_page.dart';
 import 'package:budget_master/pages/settings_page.dart';
-import 'package:flutter/material.dart';
 
 class PageManager {
   static final List<Widget> _pages = [

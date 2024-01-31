@@ -1,23 +1,21 @@
-import 'dart:math';
+import 'package:flutter/material.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:budget_master/main.dart';
 import 'package:budget_master/models/product.dart';
-import 'package:budget_master/pages/home_page.dart';
 import 'package:budget_master/screens/auth/auth_screen.dart';
 import 'package:budget_master/screens/auth/login_screen.dart';
 import 'package:budget_master/screens/auth/signup_screen.dart';
-import 'package:budget_master/screens/home_screen.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
 import 'package:budget_master/utils/navigation/router.dart';
 import 'package:budget_master/utils/ocr/processImage.dart';
-import 'package:budget_master/widgets/dialogs/loading_dialog.dart';
 import 'package:budget_master/widgets/forms/reset_password_form.dart';
 import 'package:budget_master/widgets/ui_elements/app_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:budget_master/main.dart';
-import 'package:go_router/go_router.dart';
+
 import './mock.dart';
 
 void main() {

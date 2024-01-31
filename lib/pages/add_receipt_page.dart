@@ -1,15 +1,17 @@
-import 'package:budget_master/blocs/form_blocs/receipt_form_block.dart';
-import 'package:budget_master/widgets/receipts/product_card.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../constants/constants.dart';
-import '../utils/navigation/app_router_paths.dart';
-import '../widgets/ui_elements/app_button.dart';
-import '../widgets/forms/input_widget.dart';
-import '../widgets/dialogs/loading_dialog.dart';
+import 'package:budget_master/blocs/form_blocs/receipt_form_block.dart';
+import 'package:budget_master/blocs/group_field_blocs/product_field_bloc.dart';
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
+import 'package:budget_master/widgets/dialogs/loading_dialog.dart';
+import 'package:budget_master/widgets/forms/input_widget.dart';
+import 'package:budget_master/widgets/receipts/product_card.dart';
+import 'package:budget_master/widgets/ui_elements/app_button.dart';
 
 class AddReceiptPage extends StatelessWidget {
   const AddReceiptPage({super.key});
@@ -268,15 +270,17 @@ class AddReceiptPage extends StatelessWidget {
                                         children: [
                                           ElevatedButton(
                                             onPressed: () {
-                                              receiptFormBloc.loadAndProcessImage(
-                                                  ImageSource.gallery);
+                                              receiptFormBloc
+                                                  .loadAndProcessImage(
+                                                      ImageSource.gallery);
                                             },
                                             child: Text('From gallery'),
                                           ),
                                           ElevatedButton(
                                             onPressed: () {
-                                              receiptFormBloc.loadAndProcessImage(
-                                                  ImageSource.camera);
+                                              receiptFormBloc
+                                                  .loadAndProcessImage(
+                                                      ImageSource.camera);
                                             },
                                             child: Text('Using camera'),
                                           ),

@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
 class LineChartWidget extends StatefulWidget {

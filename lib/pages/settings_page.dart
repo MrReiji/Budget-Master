@@ -1,7 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:settings_ui/settings_ui.dart';
-import '../constants/constants.dart';
+
+import 'package:budget_master/constants/constants.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

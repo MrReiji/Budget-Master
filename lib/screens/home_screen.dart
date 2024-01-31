@@ -1,9 +1,10 @@
-import 'package:budget_master/utils/navigation/page_manager.dart';
-import 'package:budget_master/widgets/ui_elements/navbar_items.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/utils/navigation/page_manager.dart';
+import 'package:budget_master/widgets/ui_elements/navbar_items.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

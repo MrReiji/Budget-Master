@@ -4,6 +4,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/material.dart';
+
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:budget_master/constants/constants.dart';
 import 'package:budget_master/models/receipt.dart';
 import 'package:budget_master/screens/auth/auth_screen.dart';
@@ -12,12 +20,6 @@ import 'package:budget_master/screens/auth/signup_screen.dart';
 import 'package:budget_master/screens/home_screen.dart';
 import 'package:budget_master/screens/receipt_screen.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 typedef Callback = void Function(MethodCall call);
 
@@ -89,8 +91,9 @@ class _myTestState extends State<MyTestApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerDelegate: TestAppRouter.get_router(initialLocation: widget.initialLocation)
-          .routerDelegate,
+      routerDelegate:
+          TestAppRouter.get_router(initialLocation: widget.initialLocation)
+              .routerDelegate,
       routeInformationParser:
           TestAppRouter.get_router(initialLocation: widget.initialLocation)
               .routeInformationParser,

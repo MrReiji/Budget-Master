@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 
-import '../../constants/constants.dart';
-import '../../utils/navigation/app_router_paths.dart';
-import '../../widgets/ui_elements/app_button.dart';
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
+import 'package:budget_master/widgets/ui_elements/app_button.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});

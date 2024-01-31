@@ -1,7 +1,9 @@
-import 'package:budget_master/utils/navigation/app_router_paths.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final _firebase = FirebaseAuth.instance;

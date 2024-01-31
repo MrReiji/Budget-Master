@@ -1,9 +1,11 @@
-import 'package:budget_master/constants/constants.dart';
-import 'package:budget_master/widgets/charts/bar_chart%20copy.dart';
-import 'package:budget_master/widgets/charts/line_chart.dart';
+import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+
+import 'package:budget_master/constants/constants.dart';
+import 'package:budget_master/widgets/charts/bar_chart.dart';
+import 'package:budget_master/widgets/charts/line_chart.dart';
 
 class ChartsPage extends StatelessWidget {
   const ChartsPage({super.key});

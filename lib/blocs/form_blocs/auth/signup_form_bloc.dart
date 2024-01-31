@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 final _firebase = FirebaseAuth.instance;

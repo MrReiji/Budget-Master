@@ -1,14 +1,15 @@
-import 'package:budget_master/models/receipt.dart';
-import 'package:budget_master/screens/auth/login_screen.dart';
-import 'package:budget_master/screens/receipt_screen.dart';
-import 'package:budget_master/screens/auth/signup_screen.dart';
-import 'package:budget_master/utils/navigation/router_notifier.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 
-import '../../screens/auth/auth_screen.dart';
-import '../../screens/home_screen.dart';
-import 'app_router_paths.dart';
+import 'package:budget_master/models/receipt.dart';
+import 'package:budget_master/screens/auth/auth_screen.dart';
+import 'package:budget_master/screens/auth/login_screen.dart';
+import 'package:budget_master/screens/auth/signup_screen.dart';
+import 'package:budget_master/screens/home_screen.dart';
+import 'package:budget_master/screens/receipt_screen.dart';
+import 'package:budget_master/utils/navigation/app_router_paths.dart';
+import 'package:budget_master/utils/navigation/router_notifier.dart';
 
 class AppRouter {
   static final router = GoRouter(

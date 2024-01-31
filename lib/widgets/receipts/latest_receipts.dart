@@ -1,9 +1,12 @@
-import 'package:budget_master/models/filter_options.dart';
 import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:budget_master/models/receipt.dart';
+
+import 'package:budget_master/models/filter_options.dart';
 import 'package:budget_master/models/product.dart';
+import 'package:budget_master/models/receipt.dart';
+
 import 'receipt_card.dart';
 
 class LatestReceipts extends StatelessWidget {
