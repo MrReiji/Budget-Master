@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:budget_master/constants/constants.dart';
 
 enum ButtonType { PRIMARY, PLAIN }
 
+/// A custom button widget that can be styled based on the [ButtonType].
+///
+/// The [AppButton] widget is a reusable button component that can be used
+/// throughout the application. It supports two types of buttons: [ButtonType.PRIMARY]
+/// and [ButtonType.PLAIN]. The button's appearance and behavior can be customized
+/// by providing the [type], [onPressed], and [text] properties.
+///
+/// Example usage:
+/// ```dart
+/// AppButton(
+///   type: ButtonType.PRIMARY,
+///   onPressed: () {
+///     // Handle button press
+///   },
+///   text: 'Submit',
+/// )
+/// ```
 class AppButton extends StatelessWidget {
   final ButtonType type;
   final VoidCallback onPressed;

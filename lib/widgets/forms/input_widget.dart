@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import '../../constants/constants.dart';
 
+/// A widget that provides an input field based on the type of [fieldBloc].
+///
+/// The [InputWidget] can be used to display various types of input fields, such as text fields or date fields,
+/// based on the type of [fieldBloc] provided.
+///
+/// - The [hintText] parameter is used to display a hint text inside the input field.
+/// - The [prefixIcon] parameter is used to display an icon at the beginning of the input field.
+/// - The [height] parameter is used to set the height of the input field.
+/// - The [topLabel] parameter is used to display a label above the input field.
+/// - The [obscureText] parameter is used to hide the input text.
+/// - The [autofillHints] parameter is used to provide autofill hints for the input field.
+/// - The [fieldBloc] parameter is required and represents the field bloc associated with the input field.
+///  -The [textInputType] parameter is used to set the keyboard type for the input field.
+///
+/// Example usage:
+/// ```dart
+/// InputWidget(
+///   hintText: 'Enter your name',
+///   prefixIcon: Icons.person,
+///   height: 70.0,
+///   topLabel: 'Name',
+///   obscureText: false,
+///   autofillHints: ['name'],
+///   fieldBloc: TextFieldBloc(),
+///   textInputType: TextInputType.text,
+/// )
+/// ```
+///
 class InputWidget extends StatelessWidget {
   final String? hintText;
   final IconData? prefixIcon;

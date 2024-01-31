@@ -1,9 +1,12 @@
-import 'package:budget_master/widgets/forms/input_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:budget_master/blocs/form_blocs/receipt_form_block.dart';
 
-//Used in AddReceiptPage
+import 'package:budget_master/blocs/group_field_blocs/product_field_bloc.dart';
+import 'package:budget_master/widgets/forms/input_widget.dart';
 
+/// A card widget that displays product information.
+///
+/// This widget is used to display a product card in a list of products.
+/// It includes fields for the product name and price, as well as a delete button.
 class ProductCard extends StatelessWidget {
   final int productIndex;
   final ProductFieldBloc productField;

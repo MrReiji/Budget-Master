@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 
+/// A dialog widget that displays a loading indicator.
+///
+/// This dialog is typically used to indicate that a process is ongoing and the user should wait.
+/// It displays a circular progress indicator inside a card.
+///
 class LoadingDialog extends StatelessWidget {
   static void show(BuildContext context, {Key? key}) => showDialog<void>(
         context: context,

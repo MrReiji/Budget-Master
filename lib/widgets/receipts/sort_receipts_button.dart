@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
+
 import 'package:budget_master/constants/constants.dart';
 
+/// A widget that displays a dropdown button for sorting receipts.
+///
+/// The [SortReceiptsButton] widget takes a list of [items] to display in the dropdown menu,
+/// a [selectedValue] to indicate the currently selected item, and an [onChanged] callback
+/// function that is called when the selected item is changed.
+///
+/// The dropdown button is styled with a hint text, an icon, and a dropdown menu with
+/// customizable styles such as height, width, and decoration.
+///
+/// Example usage:
+///
+/// ```dart
+/// SortReceiptsButton(
+///   items: ['Date', 'Amount', 'Category'],
+///   selectedValue: 'Date',
+///   onChanged: (value) {
+///     // Handle selected value change
+///   },
+/// )
+/// ```
 class SortReceiptsButton extends StatelessWidget {
   final List<String> items;
   final String? selectedValue;

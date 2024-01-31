@@ -1,11 +1,17 @@
+import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:budget_master/constants/constants.dart';
 import 'package:budget_master/models/receipt.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:budget_master/utils/navigation/app_router_paths.dart';
 
-//Widget relating to LatestReceipts and HomePageScreen
+/// A card widget that displays information about a receipt.
+///
+/// This widget is used to display a receipt card in the UI. It takes a [Receipt] object as a parameter
+/// and renders the product names, price of expenses, and purchase date associated with the receipt.
+/// The widget also provides an option to delete the receipt.
 class ReceiptCard extends StatelessWidget {
   final Receipt receipt;
 
